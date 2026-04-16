@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { buildMockComps, computeProForma } from "@/lib/evaluate";
+import { buildSeededComps, computeProForma, buildSeededEligibility, simulateNetworkDelay } from "@/lib/evaluate";
 import { EvaluateResponse } from "@/lib/types";
 
 export async function GET(request: Request) {
@@ -10,18 +10,14 @@ export async function GET(request: Request) {
 	}
 
 	// In production: fetch county STR rules, scrape public records, query Airbnb/VRBO APIs or vendors
-	const comps = buildMockComps();
+	const comps = buildSeededComps(address);
 	const proForma = computeProForma(comps);
+	const { canOperateSTR, restrictions, confidence } = buildSeededEligibility(address);
 
-	const summary = {
-		canOperateSTR: true,
-		restrictions: [
-			"Registration required with county",
-			"Max 8 guests; quiet hours 10pm-7am",
-			"Annual renewal; remittance of local lodging tax",
-		],
-		confidence: 0.68,
-	} as EvaluateResponse["summary"];
+	// Simulate realistic latency
+	await simulateNetworkDelay(420, 1000);
+
+	const summary = { canOperateSTR, restrictions, confidence } as EvaluateResponse["summary"];
 
 	const body: EvaluateResponse = {
 		address,

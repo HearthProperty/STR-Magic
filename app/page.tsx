@@ -189,35 +189,35 @@ export default function Home() {
               <div className="mt-6">
                 <h3 className="text-sm font-medium opacity-70">Breakdown</h3>
                 <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Avg Nightly Rate</p>
                     <p className="mt-1 font-medium">${data.proForma.averageNightlyRate.toFixed(0)}</p>
                   </div>
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Avg Occupancy</p>
                     <p className="mt-1 font-medium">{Math.round(data.proForma.averageOccupancy * 100)}%</p>
                   </div>
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Nights</p>
                     <p className="mt-1 font-medium">{Math.round(data.proForma.nights).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Avg Stay (nights)</p>
                     <p className="mt-1 font-medium">{data.proForma.averageStayNights}</p>
                   </div>
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Turnovers</p>
                     <p className="mt-1 font-medium">{Math.round(data.proForma.turnovers).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Room Revenue</p>
                     <p className="mt-1 font-medium">${Math.round(data.proForma.roomRevenue).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Cleaning Revenue</p>
                     <p className="mt-1 font-medium">${Math.round(data.proForma.cleaningRevenue).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-apple p-3 bg-surface">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
                     <p className="opacity-60 text-xs">Expense Assumption</p>
                     <p className="mt-1 font-medium">35% of Gross</p>
                   </div>
