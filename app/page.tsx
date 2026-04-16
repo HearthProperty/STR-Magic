@@ -33,6 +33,15 @@ export default function Home() {
     };
   }
 
+  function getEligibilityLabel(percentage: number): string {
+    if (percentage >= 95) return "Approved";
+    if (percentage >= 85) return "Favorable";
+    if (percentage >= 70) return "Limited";
+    if (percentage >= 50) return "Conditional";
+    if (percentage >= 25) return "Unfavorable";
+    return "Prohibited";
+  }
+
   async function onSearch(e: FormEvent) {
     e.preventDefault();
     setError(null);
@@ -229,7 +238,7 @@ export default function Home() {
             <section className="apple-card apple-shadow p-6">
               {(() => {
                 const percent = Math.round(data.summary.confidence * 100);
-                const label = data.summary.canOperateSTR ? "Likely Yes" : "Likely No";
+                const label = getEligibilityLabel(percent);
                 const styles = getEligibilityClasses(percent);
                 return (
                   <>
