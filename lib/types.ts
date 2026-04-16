@@ -71,3 +71,10 @@ export interface MarketMetrics {
 }
 
 
+
+export interface LeadFormInput {
+	ownerName: string;
+	email: string;
+	phone: string;
+	address: string;
+}

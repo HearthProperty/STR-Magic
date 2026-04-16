@@ -17,8 +17,18 @@ export default function Home() {
     propertyExcerpt,
     suggestions,
     showSuggestions,
+    hasUserEdited,
+    showLeadForm,
+    ownerName,
+    email,
+    phone,
+    setOwnerName,
+    setEmail,
+    setPhone,
+    setShowLeadForm,
     onChangeAddress,
     onSearch,
+    onSubmitLeadForm,
     onSelectSuggestion,
     onFocusInput,
     onBlurInput,
@@ -76,7 +86,7 @@ export default function Home() {
           <p className="mt-2 text-sm/6 sm:text-base/7 opacity-80">Enter an address. We will fetch comps, project income, and check legality.</p>
         </header>
         <form onSubmit={onSearch} className="sticky top-6 z-10">
-          <div className="relative apple-input apple-shadow px-4 py-3 flex items-center gap-3">
+          <div className="relative apple-input apple-shadow px-4 py-3 flex items-center gap-3 bg-[var(--background)]">
             <input
               value={address}
               onChange={onChangeAddress}
@@ -88,19 +98,19 @@ export default function Home() {
             <button
               type="submit"
               disabled={!address || loading}
-              className="rounded-xl px-4 py-2 bg-black text-white dark:bg-white dark:text-black text-sm font-medium disabled:opacity-50"
+              className="rounded-xl px-4 py-2 bg-black text-white dark:bg-white dark:text-black text-sm font-medium disabled:opacity-50 transition-opacity"
             >
               {loading ? "Searching…" : "Search"}
             </button>
 
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute left-0 right-0 top-[calc(100%+8px)] apple-card apple-shadow overflow-hidden">
+              <div className="absolute left-0 right-0 top-[calc(100%+8px)] apple-card apple-shadow overflow-hidden bg-[var(--background)]">
                 <ul className="py-2">
                   {suggestions.map((s) => (
                     <li key={s.placeId}>
                       <button
                         type="button"
-                        className="w-full text-left px-4 py-2 text-sm sm:text-base hover:bg-black/[.04]"
+                        className="w-full text-left px-4 py-2 text-sm sm:text-base hover:bg-black/[.04] dark:hover:bg-white/[.04]"
                         onMouseDown={onSuggestionMouseDown}
                         onClick={() => onSelectSuggestion(s)}
                       >
@@ -113,6 +123,69 @@ export default function Home() {
             )}
           </div>
         </form>
+
+        {showLeadForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="w-full max-w-md apple-card apple-shadow p-6 bg-[var(--background)] rounded-2xl relative">
+              <button 
+                type="button" 
+                onClick={() => setShowLeadForm(false)} 
+                className="absolute top-4 right-4 opacity-50 hover:opacity-100 transition-opacity"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              <h2 className="text-2xl font-semibold mb-2">Get Your Free Analysis</h2>
+              <p className="text-sm opacity-80 mb-6">Enter your details to generate an instant STR Pro Forma and eligibility check for {address}.</p>
+              
+              <form onSubmit={onSubmitLeadForm} className="space-y-4">
+                <div>
+                  <label htmlFor="ownerName" className="block text-sm font-medium opacity-80 mb-1">Full Name</label>
+                  <input
+                    id="ownerName"
+                    type="text"
+                    required
+                    value={ownerName}
+                    onChange={e => setOwnerName(e.target.value)}
+                    className="w-full apple-input px-4 py-3 bg-[var(--surface)] border border-[var(--apple)] rounded-xl outline-none focus:border-[var(--accent)] transition-colors"
+                    placeholder="John Smith"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium opacity-80 mb-1">Email</label>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="w-full apple-input px-4 py-3 bg-[var(--surface)] border border-[var(--apple)] rounded-xl outline-none focus:border-[var(--accent)] transition-colors"
+                    placeholder="john@example.com"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium opacity-80 mb-1">Phone Number</label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                    className="w-full apple-input px-4 py-3 bg-[var(--surface)] border border-[var(--apple)] rounded-xl outline-none focus:border-[var(--accent)] transition-colors"
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full mt-4 rounded-xl px-4 py-3 bg-black text-white dark:bg-white dark:text-black text-base font-medium disabled:opacity-50 transition-opacity"
+                >
+                  {loading ? "Analyzing..." : "Unlock Magic →"}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
         {error && (
           <p className="mt-6 text-red-600 dark:text-red-400 text-sm">{error}</p>

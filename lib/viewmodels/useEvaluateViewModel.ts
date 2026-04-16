@@ -17,6 +17,12 @@ export function useEvaluateViewModel() {
     const [propertyType, setPropertyType] = useState<string | null>(null);
     const [propertyExcerpt, setPropertyExcerpt] = useState<string | null>(null);
 
+    // Lead Form state
+    const [showLeadForm, setShowLeadForm] = useState(false);
+    const [ownerName, setOwnerName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+
     // Autocomplete state
     const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -32,16 +38,24 @@ export function useEvaluateViewModel() {
         setAddress(e.target.value);
     }
 
-    async function onSearch(e: FormEvent) {
+    function onSearch(e: FormEvent) {
+        e.preventDefault();
+        if (address) setShowLeadForm(true);
+    }
+
+    async function onSubmitLeadForm(e: FormEvent) {
         e.preventDefault();
         setError(null);
         setLoading(true);
         setData(null);
+        setShowLeadForm(false);
         try {
-            const params = new URLSearchParams({ address });
-            if (county) params.set("county", county);
-            if (city) params.set("city", city);
-            const res = await fetch(`/api/evaluate?${params.toString()}`);
+            const payload = { address, county, city, ownerName, email, phone };
+            const res = await fetch(`/api/evaluate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
             if (!res.ok) throw new Error("Failed to fetch evaluation");
             const json = (await res.json()) as EvaluateResponse;
             setData(json);
@@ -187,6 +201,10 @@ export function useEvaluateViewModel() {
         setSuggestions([]);
         setShowSuggestions(false);
         setHasUserEdited(false);
+        setShowLeadForm(false);
+        setOwnerName("");
+        setEmail("");
+        setPhone("");
     }
 
     // Side effects: debounced autocomplete
@@ -266,9 +284,18 @@ export function useEvaluateViewModel() {
         suggestions,
         showSuggestions,
         hasUserEdited,
+        showLeadForm,
+        ownerName,
+        email,
+        phone,
+        setOwnerName,
+        setEmail,
+        setPhone,
+        setShowLeadForm,
         // actions
         onChangeAddress,
         onSearch,
+        onSubmitLeadForm,
         onSelectSuggestion,
         onFocusInput,
         onBlurInput,
