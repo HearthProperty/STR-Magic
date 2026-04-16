@@ -230,21 +230,21 @@ export default function Home() {
 
             {/* STR Eligibility Card (moved below Pro Forma) */}
             <section className="apple-card apple-shadow p-6">
-              <h2 className="text-xl font-semibold tracking-[-0.02em]">STR Eligibility</h2>
               {(() => {
                 const percent = Math.round(data.summary.confidence * 100);
                 const label = data.summary.canOperateSTR ? "Likely Yes" : "Likely No";
                 const styles = getEligibilityClasses(percent);
                 return (
                   <>
-                    <div className="mt-4 flex items-center justify-between">
-                      <div>
-                        <p className={`text-4xl sm:text-5xl font-semibold ${styles.text}`}>{percent}%</p>
-                        <p className="mt-1 text-sm sm:text-base opacity-80">Confidence</p>
-                      </div>
-                      <span className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium ${styles.badgeBg} ${styles.text}`}>
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-xl font-semibold tracking-[-0.02em]">STR Eligibility</h2>
+                      <span className={`inline-flex items-center rounded-full border px-3.5 py-1.5 text-base font-medium ${styles.badgeBg} ${styles.text}`}>
                         {label}
                       </span>
+                    </div>
+                    <div className="mt-4">
+                      <p className={`text-4xl sm:text-5xl font-semibold ${styles.text}`}>{percent}%</p>
+                      <p className="mt-1 text-sm sm:text-base opacity-80">Confidence</p>
                     </div>
                     {data.summary.restrictions.length > 0 && (
                       <div className="mt-6">
@@ -275,7 +275,7 @@ export default function Home() {
             </section>
           </div>
         )}
-      </div>
+        </div>
     </div>
   );
 }
