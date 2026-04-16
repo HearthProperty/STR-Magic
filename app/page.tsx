@@ -199,33 +199,32 @@ export default function Home() {
                     const cs = data.market.compsStrength;
                     const count = cs?.count ?? 0;
                     const median = typeof cs?.medianDistanceMiles === "number" ? cs!.medianDistanceMiles : undefined;
+                    const radius = typeof median === "number" ? Math.max(1, Math.round(median)) : 3;
                     const label = (() => {
-                      if (!cs) return "Low"; // conservative default
                       if (count < 10 || (typeof median === "number" && median > 3)) return "Low";
                       if (count >= 20 && (typeof median !== "number" || median <= 1.5)) return "High";
                       return "Medium";
                     })();
-                    const radius = typeof median === "number" ? Math.max(1, Math.round(median)) : 3;
-                    const similarity = typeof cs?.similarityPercent === "number" ? Math.round(cs!.similarityPercent) : 62;
-
-                    // 80x80 mini-map placeholder styled to match theme
+                    const tickIndex = label === "Low" ? 1 : label === "Medium" ? 3 : 5; // 1..5
+                    const pointerLeft = ((tickIndex - 1) / 4) * 100;
+                    const reason = label === "Low" ? "Low sample size • widen radius to 5–8 mi" : label === "Medium" ? "Moderate sample • consider wider radius" : "Strong sample in close radius";
                     return (
                       <div>
-                        <div className="flex items-center gap-3">
-                          <div className="relative h-20 w-20 rounded-lg overflow-hidden border border-apple bg-[var(--card)]">
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.06),transparent_60%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.09),transparent_60%)]" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="h-16 w-16 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10" />
-                            </div>
-                            <div className="absolute top-1 left-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] bg-black/70 text-white dark:bg-white/80 dark:text-black">
-                              <span className="font-medium">{count}</span>
-                              <span className="opacity-80">{label}</span>
-                            </div>
+                        <div className="flex items-center justify-between">
+                          <p className="opacity-70 text-sm">Comps Strength</p>
+                          <p className="text-2xl font-semibold">{label}</p>
+                        </div>
+                        <div className="mt-2 relative">
+                          <div className="flex items-end justify-between gap-1">
+                            {[1,2,3,4,5].map((i) => (
+                              <span key={i} className={`${i <= tickIndex ? "bg-black/80 dark:bg-white/80" : "bg-black/15 dark:bg-white/15"} rounded-full`} style={{ width: 18, height: 6 + i * 3 }} />
+                            ))}
                           </div>
-                          <div className="min-w-0">
-                            <p className="text-sm opacity-70">Comps Strength</p>
-                            <p className="mt-1 text-sm">{count.toLocaleString()} comps • {radius} mi • {similarity}% similarity</p>
-                          </div>
+                          <span className="absolute -top-1.5 h-2 w-2 rounded-full bg-black/80 dark:bg-white/80" style={{ left: `calc(${pointerLeft}% - 1px)` }} />
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{count.toLocaleString()} comps</span>
+                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{radius} mi radius</span>
                         </div>
                       </div>
                     );
