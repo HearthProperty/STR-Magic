@@ -149,22 +149,46 @@ export default function Home() {
                   {(() => {
                     const curve = data.market.seasonalityIndex;
                     if (!curve || curve.length === 0) return <p className="mt-3 text-sm opacity-70">No data</p>;
+                    // Build a clean, responsive SVG line chart (no month letters)
                     const values = curve.map(m => m.multiplier);
-                    const max = Math.max(...values);
-                    const monthLabels = ["J","F","M","A","M","J","J","A","S","O","N","D"];
+                    const minVal = Math.min(...values);
+                    const maxVal = Math.max(...values);
+                    const width = 360; // viewBox width
+                    const height = 112; // viewBox height (matches ~h-28)
+                    const padding = 10;
+                    const innerW = width - padding * 2;
+                    const innerH = height - padding * 2;
+                    const n = curve.length;
+                    const stepX = innerW / Math.max(1, n - 1);
+                    const norm = (v: number) => {
+                      if (maxVal === minVal) return 0.5; // flat line fallback
+                      return (v - minVal) / (maxVal - minVal);
+                    };
+                    const points = values.map((v, i) => {
+                      const x = padding + i * stepX;
+                      const y = padding + (1 - norm(v)) * innerH;
+                      return { x, y };
+                    });
+                    const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+                    const areaD = `${pathD} L ${padding + (n - 1) * stepX} ${height - padding} L ${padding} ${height - padding} Z`;
+                    // Baseline at 1.0 multiplier if within range
+                    const hasBaseline = minVal <= 1 && maxVal >= 1;
+                    const baseY = padding + (1 - norm(1)) * innerH;
                     return (
                       <div className="mt-3">
-                        <div className="flex items-end gap-2 h-28">
-                          {curve.map((m, idx) => {
-                            const heightPct = Math.max(6, Math.round((m.multiplier / max) * 100));
-                            return (
-                              <div key={idx} className="flex flex-col items-center gap-1 flex-1">
-                                <div className="w-full rounded-t-md bg-black/80 dark:bg-white/80" style={{ height: `${heightPct}%` }} />
-                                <span className="text-[10px] opacity-50">{monthLabels[(m.month - 1) % 12]}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
+                        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-28">
+                          <defs>
+                            <linearGradient id="seasonalityGradient" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
+                              <stop offset="100%" stopColor="currentColor" stopOpacity="0.02" />
+                            </linearGradient>
+                          </defs>
+                          {hasBaseline && (
+                            <line x1={padding} x2={width - padding} y1={baseY} y2={baseY} className="stroke-black/10 dark:stroke-white/10" strokeWidth={1} />
+                          )}
+                          <path d={areaD} fill="url(#seasonalityGradient)" />
+                          <path d={pathD} className="stroke-black/70 dark:stroke-white/70" strokeWidth={2.5} strokeLinecap="round" fill="none" />
+                        </svg>
                       </div>
                     );
                   })()}
