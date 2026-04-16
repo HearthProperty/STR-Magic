@@ -2,6 +2,7 @@
 
 import type { ComparableListing } from "@/lib/types";
 import ThemeToggle from "@/components/ThemeToggle";
+import CompStrength from "@/components/CompStrength";
 import { useEvaluateViewModel } from "@/lib/viewmodels/useEvaluateViewModel";
 
 export default function Home() {
@@ -194,42 +195,13 @@ export default function Home() {
                   })()}
                 </div>
 
-                <div className="rounded-xl border border-apple p-4 bg-surface">
-                  {(() => {
-                    const cs = data.market.compsStrength;
-                    const count = cs?.count ?? 0;
-                    const median = typeof cs?.medianDistanceMiles === "number" ? cs!.medianDistanceMiles : undefined;
-                    const radius = typeof median === "number" ? Math.max(1, Math.round(median)) : 3;
-                    const label = (() => {
-                      if (count < 10 || (typeof median === "number" && median > 3)) return "Low";
-                      if (count >= 20 && (typeof median !== "number" || median <= 1.5)) return "High";
-                      return "Medium";
-                    })();
-                    const tickIndex = label === "Low" ? 1 : label === "Medium" ? 3 : 5; // 1..5
-                    const pointerLeft = ((tickIndex - 1) / 4) * 100;
-                    const reason = label === "Low" ? "Low sample size • widen radius to 5–8 mi" : label === "Medium" ? "Moderate sample • consider wider radius" : "Strong sample in close radius";
-                    return (
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <p className="opacity-70 text-sm">Comps Strength</p>
-                          <p className="text-2xl font-semibold">{label}</p>
-                        </div>
-                        <div className="mt-2 relative">
-                          <div className="flex items-end justify-between gap-1">
-                            {[1,2,3,4,5].map((i) => (
-                              <span key={i} className={`${i <= tickIndex ? "bg-black/80 dark:bg-white/80" : "bg-black/15 dark:bg-white/15"} rounded-full`} style={{ width: 18, height: 6 + i * 3 }} />
-                            ))}
-                          </div>
-                          <span className="absolute -top-1.5 h-2 w-2 rounded-full bg-black/80 dark:bg-white/80" style={{ left: `calc(${pointerLeft}% - 1px)` }} />
-                        </div>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{count.toLocaleString()} comps</span>
-                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{radius} mi radius</span>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
+                <CompStrength
+                  className="bg-surface border-apple"
+                  score={(data.market.compsStrength?.count ?? 0) * 4}
+                  comps={data.market.compsStrength?.count ?? 0}
+                  radiusMi={typeof data.market.compsStrength?.medianDistanceMiles === "number" ? Math.max(1, Math.round(data.market.compsStrength!.medianDistanceMiles!)) : 3}
+                  hint=""
+                />
               </div>
             </section>
 
