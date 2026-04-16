@@ -233,7 +233,7 @@ export default function Home() {
                         {label}
                       </span>
                     </div>
-                    <div className="mt-2">
+                    <div className="mt-1">
                       <p className={`text-4xl sm:text-5xl font-semibold ${styles.text}`}>{percent}%</p>
                       <p className="mt-1 text-sm sm:text-base opacity-80">Confidence</p>
                     </div>
