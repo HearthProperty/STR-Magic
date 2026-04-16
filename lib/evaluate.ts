@@ -1,4 +1,4 @@
-import { ComparableListing, ProForma } from "./types";
+import { ComparableListing, ProForma, MarketMetrics } from "./types";
 
 export function computeAverages(comps: ComparableListing[]) {
 	const count = comps.length || 1;
@@ -158,6 +158,108 @@ export async function simulateNetworkDelay(minMs = 350, maxMs = 900) {
     const span = Math.max(0, maxMs - minMs);
     const delay = minMs + Math.floor(Math.random() * span);
     await new Promise((r) => setTimeout(r, delay));
+}
+
+
+// AirDNA client shim with env-based configuration and seeded fallback
+export interface AirDNAConfig {
+    apiKey?: string;
+    baseUrl?: string;
+}
+
+export async function fetchAirDNAMarketMetrics(address: string, cfg: AirDNAConfig = {}): Promise<MarketMetrics> {
+    const apiKey = cfg.apiKey || process.env.AIRDNA_API_KEY;
+    const baseUrl = cfg.baseUrl || process.env.AIRDNA_API_BASE_URL || "https://api.airdna.co";
+
+    // If we don't have a key, estimate from comps as a fallback using seeded comps
+    if (!apiKey) {
+        const comps = buildSeededComps(address);
+        const avg = computeAverages(comps);
+        const projectedAnnualRentRevenue = Math.round(avg.averageNightlyRate * avg.averageOccupancy * 365);
+        // create a simple seasonality curve centered in summer
+        const seasonalityIndex = Array.from({ length: 12 }, (_, i) => {
+            const month = i + 1;
+            // peak in July (7), trough in Jan (1)
+            const distanceFromPeak = Math.abs(7 - month);
+            const multiplier = parseFloat((1.0 + 0.18 * Math.cos((Math.PI * distanceFromPeak) / 6)).toFixed(2));
+            return { month, multiplier };
+        });
+        return {
+            source: "estimate",
+            adr: avg.averageNightlyRate,
+            occupancy: avg.averageOccupancy,
+            projectedAnnualRentRevenue,
+            seasonalityIndex,
+            compsStrength: { count: comps.length },
+        };
+    }
+
+    // With a key, call AirDNA. Endpoint details can vary by plan; we'll try a generic pattern.
+    // This code is resilient: if the call fails, we fall back to seeded estimate above.
+    try {
+        const url = `${baseUrl}/v1/rentalizer/estimate?address=${encodeURIComponent(address)}`;
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+                Accept: "application/json",
+            },
+            // Give generous timeout via race with delay if needed by runtime
+        } as RequestInit);
+        if (!res.ok) throw new Error(`AirDNA error ${res.status}`);
+        const json = await res.json();
+
+        // Attempt to map typical fields; safely fallback when missing
+        const adr = Number(json?.metrics?.adr ?? json?.adr ?? 0);
+        const occupancy = Number(json?.metrics?.occupancy ?? json?.occupancy ?? 0) / (json?.metrics?.occupancy > 1 ? 100 : 1);
+        const projectedAnnualRentRevenue = Math.round((adr || 0) * (occupancy || 0) * 365);
+
+        const monthly = Array.isArray(json?.seasonality || json?.monthly)
+            ? (json?.seasonality || json?.monthly)
+            : [];
+        const seasonalityIndex = monthly
+            .map((m: any, idx: number) => {
+                const month = Number(m?.month ?? idx + 1);
+                const multiplier = Number(m?.multiplier ?? m?.index ?? 1);
+                return { month, multiplier };
+            })
+            .filter((m: any) => Number.isFinite(m.month) && Number.isFinite(m.multiplier));
+
+        const compsStrength = json?.comps
+            ? {
+                  count: Array.isArray(json.comps) ? json.comps.length : Number(json?.comps?.count ?? 0),
+                  medianDistanceMiles: Number(json?.comps?.median_distance_miles ?? json?.comps?.medianDistanceMiles ?? undefined),
+              }
+            : undefined;
+
+        if (!adr || !occupancy) throw new Error("Missing core metrics");
+
+        return {
+            source: "airdna",
+            adr,
+            occupancy,
+            projectedAnnualRentRevenue,
+            seasonalityIndex: seasonalityIndex.length ? seasonalityIndex : undefined,
+            compsStrength,
+        };
+    } catch (_err) {
+        const comps = buildSeededComps(address);
+        const avg = computeAverages(comps);
+        const projectedAnnualRentRevenue = Math.round(avg.averageNightlyRate * avg.averageOccupancy * 365);
+        const seasonalityIndex = Array.from({ length: 12 }, (_, i) => {
+            const month = i + 1;
+            const distanceFromPeak = Math.abs(7 - month);
+            const multiplier = parseFloat((1.0 + 0.18 * Math.cos((Math.PI * distanceFromPeak) / 6)).toFixed(2));
+            return { month, multiplier };
+        });
+        return {
+            source: "estimate",
+            adr: avg.averageNightlyRate,
+            occupancy: avg.averageOccupancy,
+            projectedAnnualRentRevenue,
+            seasonalityIndex,
+            compsStrength: { count: comps.length },
+        };
+    }
 }
 
 

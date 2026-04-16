@@ -205,6 +205,62 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Market Metrics (AirDNA) */}
+              <div className="mt-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium opacity-70">Market Metrics</h3>
+                  <span className="text-xs opacity-60">Source: {data.market.source === "airdna" ? "AirDNA" : "Estimate"}</span>
+                </div>
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
+                    <p className="opacity-60 text-xs">Projected Annual Rent Revenue</p>
+                    <p className="mt-1 font-medium">${Math.round(data.market.projectedAnnualRentRevenue).toLocaleString()}</p>
+                  </div>
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
+                    <p className="opacity-60 text-xs">ADR (Avg Daily Rate)</p>
+                    <p className="mt-1 font-medium">${Math.round(data.market.adr).toLocaleString()}</p>
+                  </div>
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
+                    <p className="opacity-60 text-xs">Occupancy</p>
+                    <p className="mt-1 font-medium">{Math.round(data.market.occupancy * 100)}%</p>
+                  </div>
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
+                    <p className="opacity-60 text-xs">RevPAR</p>
+                    <p className="mt-1 font-medium">${Math.round(data.market.adr * data.market.occupancy).toLocaleString()}</p>
+                  </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
+                    <p className="opacity-60 text-xs">Seasonality</p>
+                    {(() => {
+                      const curve = data.market.seasonalityIndex;
+                      if (!curve || curve.length === 0) return <p className="mt-1 font-medium">—</p>;
+                      const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                      const peak = curve.reduce((a, b) => (b.multiplier > a.multiplier ? b : a));
+                      const low = curve.reduce((a, b) => (b.multiplier < a.multiplier ? b : a));
+                      return (
+                        <p className="mt-1 font-medium">
+                          Peak {monthNames[(peak.month - 1) % 12]} = {peak.multiplier.toFixed(2)}× · Low {monthNames[(low.month - 1) % 12]} = {low.multiplier.toFixed(2)}×
+                        </p>
+                      );
+                    })()}
+                  </div>
+                  <div className="rounded-xl border border-apple p-4 bg-surface">
+                    <p className="opacity-60 text-xs">Comps Strength</p>
+                    {(() => {
+                      const cs = data.market.compsStrength;
+                      if (!cs) return <p className="mt-1 font-medium">—</p>;
+                      return (
+                        <p className="mt-1 font-medium">
+                          {cs.count} comps{typeof cs.medianDistanceMiles === "number" ? ` · ~${cs.medianDistanceMiles.toFixed(1)} mi median` : ""}
+                        </p>
+                      );
+                    })()}
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-6">
                 <h3 className="text-sm font-medium opacity-70">Breakdown</h3>
                 <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">

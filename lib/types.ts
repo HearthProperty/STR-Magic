@@ -34,6 +34,7 @@ export interface EvaluateResponse {
 	summary: EvaluateSummary;
 	comps: ComparableListing[];
 	proForma: ProForma;
+	market: MarketMetrics;
 }
 
 export interface PlaceSuggestion {
@@ -54,6 +55,18 @@ export interface PlaceDetails {
 	formattedAddress: string;
 	location: { lat: number; lng: number };
 	addressComponents: PlaceDetailsAddressComponent[];
+}
+
+
+export type MarketMetricsSource = "airdna" | "estimate";
+
+export interface MarketMetrics {
+	source: MarketMetricsSource;
+	adr: number; // Average Daily Rate (USD)
+	occupancy: number; // 0..1
+	projectedAnnualRentRevenue: number; // ADR * occupancy * 365 (exclude cleaning)
+	seasonalityIndex?: Array<{ month: number; multiplier: number }>; // 1..12 months
+	compsStrength?: { count: number; medianDistanceMiles?: number };
 }
 
 

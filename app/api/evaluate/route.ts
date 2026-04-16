@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { buildSeededComps, computeProForma, buildSeededEligibility, simulateNetworkDelay } from "@/lib/evaluate";
+import { buildSeededComps, computeProForma, buildSeededEligibility, simulateNetworkDelay, fetchAirDNAMarketMetrics } from "@/lib/evaluate";
 import { EvaluateResponse } from "@/lib/types";
 
 export async function GET(request: Request) {
@@ -12,6 +12,7 @@ export async function GET(request: Request) {
 	// In production: fetch county STR rules, scrape public records, query Airbnb/VRBO APIs or vendors
 	const comps = buildSeededComps(address);
 	const proForma = computeProForma(comps);
+	const market = await fetchAirDNAMarketMetrics(address);
 	const { canOperateSTR, restrictions, confidence } = buildSeededEligibility(address);
 
 	// Simulate realistic latency
@@ -24,6 +25,7 @@ export async function GET(request: Request) {
 		summary,
 		comps,
 		proForma,
+		market,
 	};
 
 	return NextResponse.json(body);
