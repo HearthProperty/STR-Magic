@@ -55,6 +55,7 @@ export interface PlaceDetails {
 	formattedAddress: string;
 	location: { lat: number; lng: number };
 	addressComponents: PlaceDetailsAddressComponent[];
+	types?: string[];
 }
 
 

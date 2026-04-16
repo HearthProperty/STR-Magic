@@ -11,6 +11,9 @@ export function useEvaluateViewModel() {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<EvaluateResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [placeDetails, setPlaceDetails] = useState<PlaceDetails | null>(null);
+    const [county, setCounty] = useState<string | null>(null);
+    const [propertyType, setPropertyType] = useState<string | null>(null);
 
     // Autocomplete state
     const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
@@ -53,11 +56,79 @@ export function useEvaluateViewModel() {
             if (res.ok) {
                 const details = (await res.json()) as PlaceDetails;
                 setAddress(details.formattedAddress || s.description);
+                setPlaceDetails(details);
+                // derive county using LocationIQ first (prefer external canonical county labels)
+                let nextPropertyType: string | null = null;
+                try {
+                    const { lat, lng } = details.location;
+                    const liq = await fetch(`/api/locationiq/reverse?lat=${encodeURIComponent(String(lat))}&lng=${encodeURIComponent(String(lng))}`);
+                    if (liq.ok) {
+                        const lj = await liq.json();
+                        try { console.log('[VM] LocationIQ reverse', lj); } catch {}
+                        if (lj?.county) setCounty(String(lj.county).replace(/\s*County$/i, ""));
+                        if (lj?.homeType) nextPropertyType = lj.homeType;
+                        else {
+                            const countyComp = details.addressComponents.find((c) => c.types.includes("administrative_area_level_2"));
+                            const rawCounty = countyComp?.longName || countyComp?.shortName || null;
+                            setCounty(rawCounty ? rawCounty.replace(/\s*County$/i, "") : null);
+                        }
+                    } else {
+                        const countyComp = details.addressComponents.find((c) => c.types.includes("administrative_area_level_2"));
+                        const rawCounty = countyComp?.longName || countyComp?.shortName || null;
+                        setCounty(rawCounty ? rawCounty.replace(/\s*County$/i, "") : null);
+                    }
+                } catch {
+                    const countyComp = details.addressComponents.find((c) => c.types.includes("administrative_area_level_2"));
+                    const rawCounty = countyComp?.longName || countyComp?.shortName || null;
+                    setCounty(rawCounty ? rawCounty.replace(/\s*County$/i, "") : null);
+                }
+                // If we still lack propertyType, try LocationIQ forward search with full address
+                if (!nextPropertyType) {
+                    try {
+                        const q = encodeURIComponent(details.formattedAddress || s.description);
+                        const resp = await fetch(`/api/locationiq/search?q=${q}`);
+                        if (resp.ok) {
+                            const sj = await resp.json();
+                            try { console.log('[VM] LocationIQ search', sj); } catch {}
+                            const cls = (sj?.result?.class || "").toString().toLowerCase();
+                            const typ = (sj?.result?.type || "").toString().toLowerCase();
+                            const osmType = (sj?.result?.osm_type || "").toString().toUpperCase();
+                            const osmId = sj?.result?.osm_id ? String(sj.result.osm_id) : "";
+                            const raw = `${cls}|${typ}`;
+                            if (/apartment|apartments|condo|condominium|flats/.test(raw)) nextPropertyType = "Condo/Apartment";
+                            else if (/townhouse|rowhouse|terrace|terraced/.test(raw)) nextPropertyType = "Townhouse";
+                            else if (/house|detached|semidetached|semi-detached|residential/.test(raw)) nextPropertyType = "Single Family";
+                            // If still ambiguous and we have OSM IDs, fetch details
+                            if (!nextPropertyType && osmType && osmId) {
+                                try {
+                                    const dj = await fetch(`/api/locationiq/details?osm_type=${encodeURIComponent(osmType)}&osm_id=${encodeURIComponent(osmId)}`).then(r => r.json());
+                                    try { console.log('[VM] LocationIQ details', dj); } catch {}
+                                    const ht = dj?.result?.homeType;
+                                    if (ht) nextPropertyType = ht;
+                                } catch {}
+                            }
+                        }
+                    } catch {}
+                }
+                // Final fallback: Google types heuristic
+                if (!nextPropertyType && Array.isArray(details.types) && details.types.length > 0) {
+                    const gtypes = details.types.map((t) => t.toLowerCase());
+                    if (gtypes.some(t => t.includes("premise") || t.includes("subpremise") || t.includes("apartment"))) nextPropertyType = "Condo/Apartment";
+                    else if (gtypes.some(t => t.includes("route") || t.includes("street_address"))) nextPropertyType = "Single Family";
+                }
+                setPropertyType(nextPropertyType);
+                // property type now relies on LocationIQ hint only; if not provided, leave null
             } else {
                 setAddress(s.description);
+                setPlaceDetails(null);
+                setCounty(null);
+                setPropertyType(null);
             }
         } catch {
             setAddress(s.description);
+            setPlaceDetails(null);
+            setCounty(null);
+            setPropertyType(null);
         }
     }
 
@@ -78,6 +149,9 @@ export function useEvaluateViewModel() {
         setAddress("");
         setData(null);
         setError(null);
+        setPlaceDetails(null);
+        setCounty(null);
+        setPropertyType(null);
         setSuggestions([]);
         setShowSuggestions(false);
         setHasUserEdited(false);
@@ -123,6 +197,9 @@ export function useEvaluateViewModel() {
         loading,
         data,
         error,
+        placeDetails,
+        county,
+        propertyType,
         suggestions,
         showSuggestions,
         hasUserEdited,

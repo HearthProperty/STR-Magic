@@ -2,7 +2,6 @@
 
 import type { ComparableListing } from "@/lib/types";
 import ThemeToggle from "@/components/ThemeToggle";
-import CompStrength from "@/components/CompStrength";
 import { useEvaluateViewModel } from "@/lib/viewmodels/useEvaluateViewModel";
 
 export default function Home() {
@@ -11,6 +10,9 @@ export default function Home() {
     loading,
     data,
     error,
+    placeDetails,
+    county,
+    propertyType,
     suggestions,
     showSuggestions,
     onChangeAddress,
@@ -118,8 +120,10 @@ export default function Home() {
           <div className="mt-10 grid gap-6">
             <section className="apple-card apple-shadow p-6">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Summary</h2>
-              <div className="mt-3 text-sm sm:text-base opacity-90">
-                <p><span className="font-medium">Address:</span> {data.address}</p>
+              <div className="mt-3 grid grid-cols-1 gap-2 text-sm sm:text-base opacity-90">
+                <p><span className="font-medium">Address:</span> {placeDetails?.formattedAddress || data.address}</p>
+                <p><span className="font-medium">County:</span> {county || "N/A"}</p>
+                <p><span className="font-medium">Property type:</span> {propertyType || "—"}</p>
               </div>
             </section>
 
@@ -195,13 +199,43 @@ export default function Home() {
                   })()}
                 </div>
 
-                <CompStrength
-                  className="bg-surface border-apple"
-                  score={(data.market.compsStrength?.count ?? 0) * 4}
-                  comps={data.market.compsStrength?.count ?? 0}
-                  radiusMi={typeof data.market.compsStrength?.medianDistanceMiles === "number" ? Math.max(1, Math.round(data.market.compsStrength!.medianDistanceMiles!)) : 3}
-                  hint=""
-                />
+                <div className="rounded-xl border border-apple p-4 bg-surface">
+                  {(() => {
+                    const cs = data.market.compsStrength;
+                    const count = cs?.count ?? 0;
+                    const median = typeof cs?.medianDistanceMiles === "number" ? cs!.medianDistanceMiles : undefined;
+                    const radius = typeof median === "number" ? Math.max(1, Math.round(median)) : 3;
+                    // score heuristic: scaled count minus radius penalty
+                    const raw = Math.min(100, (count / 30) * 100);
+                    const penalty = Math.min(30, Math.max(0, (radius - 1) * 10));
+                    const score = Math.max(0, Math.min(100, Math.round(raw - penalty)));
+                    const label = score < 34 ? "Low" : score < 67 ? "Medium" : "High";
+                    const pos = score; // 0..100
+                    const similarity = typeof cs?.similarityPercent === "number" ? Math.round(cs!.similarityPercent) : undefined;
+                    return (
+                      <div>
+                        <div className="flex items-start justify-between">
+                          <p className="text-sm opacity-70">Comps Strength</p>
+                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium bg-black/[.06] text-black/80 dark:bg-white/10 dark:text-white/90 border border-apple">{label}</span>
+                        </div>
+                        <div className="mt-3">
+                          <div className="relative h-2 rounded-full overflow-hidden bg-black/10 dark:bg-white/10">
+                            <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(244,63,94,0.6) 0%, rgba(245,158,11,0.6) 40%, rgba(34,197,94,0.6) 100%)" }} />
+                            <div className="absolute -top-1 h-4 w-4 rounded-full bg-white border border-black/10 dark:bg-black dark:border-white/20 shadow" style={{ left: `${pos}%`, transform: "translateX(-50%)" }} />
+                          </div>
+                          <div className="sr-only" aria-live="polite">Comps strength {label} (score {score})</div>
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{count.toLocaleString()} comps</span>
+                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{radius} mi radius</span>
+                          {typeof similarity === "number" && (
+                            <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{similarity}% similarity</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
               </div>
             </section>
 
