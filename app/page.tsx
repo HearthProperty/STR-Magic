@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import type { EvaluateResponse } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import type { EvaluateResponse, PlaceSuggestion } from "@/lib/types";
 
 export default function Home() {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<EvaluateResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const debounceRef = useRef<number | undefined>(undefined);
+  const abortRef = useRef<AbortController | null>(null);
 
   async function onSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -26,6 +30,41 @@ export default function Home() {
     }
   }
 
+  function onSelectSuggestion(s: PlaceSuggestion) {
+    setAddress(s.description);
+    setShowSuggestions(false);
+    setSuggestions([]);
+  }
+
+  useEffect(() => {
+    // Debounced autocomplete
+    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    if (!address || address.trim().length < 3) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    debounceRef.current = window.setTimeout(async () => {
+      try {
+        if (abortRef.current) abortRef.current.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
+        const res = await fetch(`/api/places/autocomplete?input=${encodeURIComponent(address)}`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error("Autocomplete failed");
+        const json = (await res.json()) as { predictions: PlaceSuggestion[] };
+        setSuggestions(json.predictions?.slice(0, 6) || []);
+        setShowSuggestions(true);
+      } catch (_err) {
+        // Ignore abort errors or network blips; keep UX smooth
+      }
+    }, 250);
+    return () => {
+      if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    };
+  }, [address]);
+
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <div className="mx-auto max-w-3xl px-6 py-16">
@@ -34,12 +73,19 @@ export default function Home() {
           <p className="mt-2 text-sm/6 sm:text-base/7 opacity-80">Enter an address. We will fetch comps, project income, and check legality.</p>
         </header>
         <form onSubmit={onSearch} className="sticky top-6 z-10">
-          <div className="rounded-2xl border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/5 backdrop-blur px-4 py-3 flex items-center gap-3 shadow-[0_1px_0_#0001,0_8px_30px_rgba(0,0,0,0.06)]">
+          <div className="relative rounded-2xl border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/5 backdrop-blur px-4 py-3 flex items-center gap-3 shadow-[0_1px_0_#0001,0_8px_30px_rgba(0,0,0,0.06)]">
             <input
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Search an address"
               className="w-full bg-transparent outline-none placeholder:opacity-60 text-base sm:text-lg"
+              onFocus={() => {
+                if (suggestions.length > 0) setShowSuggestions(true);
+              }}
+              onBlur={() => {
+                // Delay to allow click on suggestion
+                setTimeout(() => setShowSuggestions(false), 120);
+              }}
             />
             <button
               type="submit"
@@ -48,6 +94,25 @@ export default function Home() {
             >
               {loading ? "Searching…" : "Search"}
             </button>
+
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute left-0 right-0 top-[calc(100%+8px)] rounded-2xl border border-black/10 dark:border-white/15 bg-white/85 dark:bg-neutral-900/85 backdrop-blur shadow-[0_1px_0_#0001,0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden">
+                <ul className="py-2">
+                  {suggestions.map((s) => (
+                    <li key={s.placeId}>
+                      <button
+                        type="button"
+                        className="w-full text-left px-4 py-2 text-sm sm:text-base hover:bg-black/[.04] dark:hover:bg-white/[.06]"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => onSelectSuggestion(s)}
+                      >
+                        {s.description}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </form>
 

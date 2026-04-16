@@ -27,4 +27,11 @@ export interface EvaluateResponse {
 	proForma: ProForma;
 }
 
+export interface PlaceSuggestion {
+	placeId: string;
+	description: string;
+	types?: string[];
+	matchedSubstrings?: Array<{ offset: number; length: number }>;
+}
+
 
