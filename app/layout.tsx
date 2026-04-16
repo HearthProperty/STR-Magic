@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "STR Magic",
   description: "Premium STR underwriting: comps, pro forma, and legality in one search.",
+};
+
+export const viewport: Viewport = {
   themeColor: "#ffffff",
 };
 
