@@ -1,0 +1,565 @@
+[
+  {
+    "state": "CA",
+    "county": "Los Angeles",
+    "city": null,
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "PRIMARY_RESIDENCE"],
+    "notes": "Unincorporated LA County allows STRs as an accessory use only at a host’s primary residence with annual registration through the Treasurer & Tax Collector.",
+    "sources": [
+      "https://planning.lacounty.gov/long-range-planning/short-term-rentals-ordinance/",
+      "https://library.municode.com/ca/los_angeles_county/codes/code_of_ordinances?nodeId=TIT7BULI_DIV3SHRMRERE_CH7.96GESHRMRERERE_7.96.010PUIN",
+      "https://ttc.lacounty.gov/str/",
+      "https://planning.lacounty.gov/wp-content/uploads/2024/03/str_fact_sheet.pdf"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Los Angeles",
+    "city": "Los Angeles",
+    "confidencePercent": 50,
+    "restrictions": ["PERMIT_REQUIRED", "PRIMARY_RESIDENCE"],
+    "notes": "City’s Home-Sharing Ordinance requires registration and limits rentals to a host’s primary residence; unhosted stays are capped by ordinance (commonly 120 nights).",
+    "sources": [
+      "https://planning.lacity.gov/project-review/home-sharing",
+      "https://planning.lacity.gov/odocument/43c0d768-9b9c-4a98-b8e3-4f20a9307d45/Draft_STR_Technical_Amendment_Ordinance_Dated_July_2025.pdf",
+      "https://planning.lacity.gov/ordinances/docs/HomeSharing/FAQ.pdf"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Los Angeles",
+    "city": "Santa Monica",
+    "confidencePercent": 35,
+    "restrictions": ["HOSTED_ONLY", "PERMIT_REQUIRED", "PRIMARY_RESIDENCE"],
+    "notes": "Vacation rentals (unhosted) are prohibited; only hosted home-sharing at a primary residence is allowed with registration and TOT.",
+    "sources": [
+      "https://www.santamonica.gov/short-term-rentals",
+      "https://www.santamonica.gov/press/2015/05/12/city-council-approves-home-sharing-ordinance"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Los Angeles",
+    "city": "West Hollywood",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "Rentals for fewer than 31 consecutive days are prohibited by ordinance; enforcement information published by the City.",
+    "sources": [
+      "https://www.weho.org/city-government/city-manager-s-office/code-compliance/short-term-rentals",
+      "https://library.municode.com/ca/west_hollywood/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Los Angeles",
+    "city": "Beverly Hills",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "City states short-term rentals are not permitted; council has advanced a full ban on STRs, reinforcing prohibition.",
+    "sources": [
+      "https://www.beverlyhills.org/departments/communitydevelopment/codeenforcement/shorttermrentals/",
+      "https://www.beverlyhills.org/departments/communitydevelopment/codeenforcement/illegalrentalactivity/",
+      "https://www.sfgate.com/travel/article/california-city-short-term-rental-ban-20761859.php"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Los Angeles",
+    "city": "Malibu",
+    "confidencePercent": 50,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Malibu administers a STR program with permit and operating standards; additional coastal and zoning constraints apply.",
+    "sources": [
+      "https://www.malibucity.org/1054/Short-Term-Rentals",
+      "https://library.municode.com/ca/malibu/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Francisco",
+    "city": "San Francisco",
+    "confidencePercent": 40,
+    "restrictions": ["HOSTED_ONLY", "NIGHTS_CAP_90", "PERMIT_REQUIRED", "PRIMARY_RESIDENCE"],
+    "notes": "Primary residence required; unhosted rentals capped at 90 nights/year with registration through the Office of Short-Term Rentals.",
+    "sources": [
+      "https://sfplanning.org/str",
+      "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-39105"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Diego",
+    "city": null,
+    "confidencePercent": 70,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated County allows STRs in certain zones with permits and operating standards; details vary by community.",
+    "sources": [
+      "https://www.sandiegocounty.gov/content/sdc/pds/str.html",
+      "https://www.sandiegocounty.gov/content/sdc/pds/zoning/short-term-residential-rentals.html"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Diego",
+    "city": "San Diego",
+    "confidencePercent": 50,
+    "restrictions": ["FINITE_PERMITS", "LOTTERY", "PERMIT_REQUIRED", "ZONING_LIMITS", "NIGHTS_CAP_90"],
+    "notes": "City issues tiered licenses with an overall cap (separate Mission Beach cap) and a 90-day whole-home ‘Part-Time’ license; initial allocations used lottery mechanisms.",
+    "sources": [
+      "https://www.sandiego.gov/stvr",
+      "https://www.sandiego.gov/sites/default/files/stro-ordinance.pdf"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Orange",
+    "city": "Anaheim",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "City bans STRs (with limited legacy exceptions ended); official page outlines prohibition and enforcement.",
+    "sources": [
+      "https://www.anaheim.net/5360/Short-Term-Rentals-STR",
+      "https://library.municode.com/ca/anaheim/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Orange",
+    "city": "Irvine",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "Short-term rentals (fewer than 31 days) are prohibited citywide under the municipal code.",
+    "sources": [
+      "https://www.cityofirvine.org/community-development/short-term-rentals",
+      "https://library.municode.com/ca/irvine/codes/zoning_code?nodeId=ZO_COOR_T9LAUS_CH3GEPR_S3-3DEFIZOUS"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Riverside",
+    "city": null,
+    "confidencePercent": 75,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated Riverside County allows STRs with Short-Term Rental Certificates and operational standards; zoning and spacing rules apply.",
+    "sources": [
+      "https://planning.rctlma.org/Home/ShortTermRentals.aspx",
+      "https://library.municode.com/ca/riverside_county/codes/code_of_ordinances?nodeId=TIT5BUCA_CH5.84SHRTRERE"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Riverside",
+    "city": "Palm Springs",
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "FINITE_PERMITS", "ZONING_LIMITS"],
+    "notes": "City vacation rentals require permits with contract caps and neighborhood/zone limits; robust enforcement and operating rules.",
+    "sources": [
+      "https://www.palmspringsca.gov/government/departments/vacation-rentals",
+      "https://library.qcode.us/lib/palm_springs_ca/pub/municipal_code/item/title_5-chapter_5_25"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Riverside",
+    "city": "Rancho Mirage",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "City bans STRs; municipal code §17.30.270(B) prohibits operation or advertising of short-term rentals in every zone.",
+    "sources": [
+      "https://ranchomirageca.gov/residents/city_programs_for_residents/short-term_rentals.php",
+      "https://library.municode.com/ca/rancho_mirage/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Bernardino",
+    "city": null,
+    "confidencePercent": 75,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated County requires STR permits, local contact, and compliance with development code; community-specific standards apply.",
+    "sources": [
+      "https://lus.sbcounty.gov/land-use-services/short-term-rental-ordinance/",
+      "https://www.yourunitedway.org/sbcounty-ordinance-short-term-rental/"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Bernardino",
+    "city": "Big Bear Lake",
+    "confidencePercent": 70,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "City licenses Transient Private Home Rentals with operating standards, occupancy and parking limits, and enforcement.",
+    "sources": [
+      "https://www.citybigbearlake.com/index.php/residents/short-term-rentals",
+      "https://www.citybigbearlake.com/images/Departments/Planning/TPHR/TPHR_Code_Ordinance.pdf"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Placer",
+    "city": null,
+    "confidencePercent": 75,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "County STR Ordinance (notably in the Tahoe Basin) requires a STR permit, fire/life safety compliance, and local contact.",
+    "sources": [
+      "https://www.placer.ca.gov/7997/Short-Term-Rentals",
+      "https://qcode.us/codes/placercounty/view.php?topic=9-9_42&show=full"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "El Dorado",
+    "city": null,
+    "confidencePercent": 70,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated County (South Lake Tahoe area) administers a Vacation Home Rental (VHR) permit program with standards and limits.",
+    "sources": [
+      "https://www.edcgov.us/Government/planning/vhr",
+      "https://library.municode.com/ca/el_dorado_county/codes/code_of_ordinances?nodeId=TIT5BUCA_CH5.56VAHORE"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "El Dorado",
+    "city": "South Lake Tahoe",
+    "confidencePercent": 25,
+    "restrictions": ["HOSTED_ONLY", "PERMIT_REQUIRED", "PRIMARY_RESIDENCE", "ZONING_LIMITS"],
+    "notes": "Measure T and subsequent ordinances prohibit vacation home rentals in most residential areas; hosted rentals allowed with strict rules.",
+    "sources": [
+      "https://www.cityofslt.us/315/Vacation-Home-Rentals",
+      "https://www.cityofslt.us/DocumentCenter/View/11735/Measure-T-FAQ"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Marin",
+    "city": null,
+    "confidencePercent": 50,
+    "restrictions": ["PERMIT_REQUIRED", "PRIMARY_RESIDENCE", "HOSTED_ONLY", "ZONING_LIMITS"],
+    "notes": "County materials emphasize hosted/primary residence standards and permitting for unincorporated areas; verify community-specific overlays.",
+    "sources": [
+      "https://www.marincounty.org/depts/cd/divisions/planning/short-term-rentals",
+      "https://www.marincounty.org/depts/cd/divisions/planning/short-term-rentals/meeting-materials"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Napa",
+    "city": null,
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED", "ZONING_LIMITS"],
+    "notes": "Unincorporated Napa generally prohibits vacation rentals in residential zones; limited allowances exist in certain commercial/ag zones.",
+    "sources": [
+      "https://www.countyofnapa.org/1487/Vacation-Rentals",
+      "https://library.municode.com/ca/napa_county/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Napa",
+    "city": "Napa",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "City prohibits STRs in most residential zoning districts; enforcement information provided by the City.",
+    "sources": [
+      "https://www.cityofnapa.org/802/Short-Term-Rentals",
+      "https://library.municode.com/ca/napa/codes/municipal_code"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Sonoma",
+    "city": null,
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS", "FINITE_PERMITS"],
+    "notes": "County Vacation Rental Ordinance requires permits, local contact, occupancy limits, and district-level caps/exclusion zones.",
+    "sources": [
+      "https://permitsonoma.org/divisions/codeenforcement/vacationrentals",
+      "https://sonoma-county.legistar.com/View.ashx?M=F&ID=12164286&GUID=0B1B4E8D-2B1D-478F-AF42-33337F14B2C7"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Sonoma",
+    "city": "Healdsburg",
+    "confidencePercent": 25,
+    "restrictions": ["HOSTED_ONLY", "ZONING_LIMITS"],
+    "notes": "City bans vacation home rentals as a use in most residential districts; limited hosted/B&B-type uses allowed by permit.",
+    "sources": [
+      "https://healdsburg.gov/1122/Denied-Uses",
+      "https://library.municode.com/ca/healdsburg/codes/municipal_code"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Sonoma",
+    "city": "Sonoma",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "City prohibits vacation rentals in residential districts; ordinance prohibits transient use of dwellings except limited cases.",
+    "sources": [
+      "https://www.sonomacity.org/DocumentCenter/View/2647/Short-Term-Vacation-Rental-Information",
+      "https://library.municode.com/ca/sonoma/codes/municipal_code"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Santa Barbara",
+    "city": null,
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated County regulates STRs/homestays with permits; coastal vs. inland standards differ by ordinance.",
+    "sources": [
+      "https://www.countyofsb.org/3176/Short-Term-Rentals-Homestays",
+      "https://library.municode.com/ca/santa_barbara_county/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Santa Barbara",
+    "city": "Santa Barbara",
+    "confidencePercent": 25,
+    "restrictions": ["HOSTED_ONLY", "ZONING_LIMITS"],
+    "notes": "City states STRs are not permitted in most residential zones; only limited hosted arrangements or specific zones may qualify.",
+    "sources": [
+      "https://santabarbaraca.gov/government/departments/community-development/programs/short-term-vacation-rentals",
+      "https://santabarbaraca.gov/services/planning/zoning-information"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Santa Cruz",
+    "city": null,
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS", "FINITE_PERMITS"],
+    "notes": "County caps vacation rental permits by area with registration/permits and operating standards; includes coastal special regs.",
+    "sources": [
+      "https://sccoplanning.com/PlanningHome/ShortTermRentals.aspx",
+      "https://www.codepublishing.com/CA/SantaCruzCounty/"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Mateo",
+    "city": null,
+    "confidencePercent": 70,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated San Mateo County allows STRs with permit/registration and operating standards (especially in coastal areas).",
+    "sources": [
+      "https://planning.smcgov.org/short-term-rentals",
+      "https://library.municode.com/ca/san_mateo_county/codes/ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Monterey",
+    "city": "Monterey",
+    "confidencePercent": 25,
+    "restrictions": ["HOSTED_ONLY", "ZONING_LIMITS", "PERMIT_REQUIRED"],
+    "notes": "City bans vacation rentals in low-density residential zones; limited hosted ‘home-sharing’ allowances subject to permit.",
+    "sources": [
+      "https://www.monterey.org/Short-Term-Rentals",
+      "https://library.municode.com/ca/monterey/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Monterey",
+    "city": "Carmel-by-the-Sea",
+    "confidencePercent": 10,
+    "restrictions": ["PROHIBITED"],
+    "notes": "City prohibits transient rentals in residential districts; enforcement information provided by the City.",
+    "sources": [
+      "https://ci.carmel.ca.us/short-term-rentals",
+      "https://library.municode.com/ca/carmel-by-the-sea/codes/code_of_ordinances"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Monterey",
+    "city": "Pacific Grove",
+    "confidencePercent": 40,
+    "restrictions": ["PERMIT_REQUIRED", "FINITE_PERMITS", "LOTTERY", "ZONING_LIMITS"],
+    "notes": "City limits STRs with a finite license pool, neighborhood caps, and lottery/attrition; permit and operating standards required.",
+    "sources": [
+      "https://www.cityofpacificgrove.org/our_city/departments/community_development/short-term_vacation_rentals.php",
+      "https://library.municode.com/ca/pacific_grove/codes/municipal_code?nodeId=TIT7BULI_CH7.40SHTRVARE"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Luis Obispo",
+    "city": null,
+    "confidencePercent": 75,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated County requires zoning clearance/permits (inland and coastal) for vacation rentals with district-specific rules.",
+    "sources": [
+      "https://www.slocounty.ca.gov/departments/planning-building/how-to-apply-for-a-permit-in-unincorporated-slo-co/business-license-clearance/vacation-rental-zoning-clearance/inland-vacation-rental-clearance",
+      "https://slocounty-ca.elaws.us/code/cc_title23_ch23.08_sec23.08.165"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Luis Obispo",
+    "city": "San Luis Obispo",
+    "confidencePercent": 35,
+    "restrictions": ["HOSTED_ONLY", "PERMIT_REQUIRED", "PRIMARY_RESIDENCE"],
+    "notes": "City allows owner-occupied homestay rentals by permit; non-hosted whole-home STRs are not allowed.",
+    "sources": [
+      "https://sanluisobispo.municipal.codes/Code/17.86.160",
+      "https://www.slocity.org/services/how-do-i/apply-for/permits/permits-for-home-owners-and-renters"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Luis Obispo",
+    "city": "Morro Bay",
+    "confidencePercent": 70,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "City requires permits and imposes density/spacing and operational standards for vacation rentals.",
+    "sources": [
+      "https://www.morrobayca.gov/DocumentCenter/View/18261/Short-Term-Vacation-Rental-Information",
+      "https://morrobayca.gov/DocumentCenter/View/18478/Short-Term-Vacation-Rental-Application-Packet"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "San Luis Obispo",
+    "city": "Pismo Beach",
+    "confidencePercent": 40,
+    "restrictions": ["PERMIT_REQUIRED", "FINITE_PERMITS", "ZONING_LIMITS"],
+    "notes": "City regulates STRs via permits and caps; as of Nov. 7, 2023, new STR licenses were paused under Ordinance O-2023-006.",
+    "sources": [
+      "https://pismobeach.org/881/Vacation-Rental-and-Short-Term-Rental-Pe",
+      "https://codelibrary.amlegal.com/codes/pismobeach/latest/pismo_ca/0-0-0-20769"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Alameda",
+    "city": "Oakland",
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "PRIMARY_RESIDENCE", "ZONING_LIMITS"],
+    "notes": "City allows short-term residential rentals at a primary residence subject to registration and operating standards.",
+    "sources": [
+      "https://library.municode.com/ca/oakland/codes/code_of_ordinances?nodeId=TIT5BUCO_CH5.52SHRERERE",
+      "https://www.oaklandca.gov/topics/short-term-residential-rental-program"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Alameda",
+    "city": "Berkeley",
+    "confidencePercent": 50,
+    "restrictions": ["HOSTED_ONLY", "PERMIT_REQUIRED", "PRIMARY_RESIDENCE"],
+    "notes": "Berkeley limits STRs to primary residences with registration; unhosted whole-unit rentals are heavily restricted or disallowed.",
+    "sources": [
+      "https://berkeleyca.gov/construction-development/permits/short-term-rentals",
+      "https://library.municode.com/ca/berkeley/codes/municipal_code?nodeId=TIT23ZO"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Contra Costa",
+    "city": null,
+    "confidencePercent": 70,
+    "restrictions": ["PERMIT_REQUIRED", "ZONING_LIMITS"],
+    "notes": "Unincorporated County allows STRs with a Short-Term Rental Permit and operating standards adopted by Ord. 2020-12.",
+    "sources": [
+      "https://www.contracosta.ca.gov/3110/Transient-Occupancy-Tax",
+      "https://www.contracosta.ca.gov/DocumentCenter/View/67827/STR_Summary"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Santa Clara",
+    "city": null,
+    "confidencePercent": 90,
+    "restrictions": ["TAX_ONLY"],
+    "notes": "County collects TOT for short-term lodging in unincorporated areas; no separate countywide STR permit program is published.",
+    "sources": [
+      "https://dtac.santaclaracounty.gov/taxes/pay-transient-occupancy-tax"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Santa Clara",
+    "city": "Mountain View",
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "NIGHTS_CAP_90", "PRIMARY_RESIDENCE"],
+    "notes": "City requires registration/TOT; whole-home rentals are capped at 90 nights per year, with unlimited hosted stays at a primary residence.",
+    "sources": [
+      "https://library.municode.com/ca/mountain_view/codes/code_of_ordinances?nodeId=PTIITHCO_CH44SHRMREREPR",
+      "https://www.mountainview.gov/our-city/departments/finance-and-administrative-services/billing/short-term-rentals"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Sacramento",
+    "city": null,
+    "confidencePercent": 85,
+    "restrictions": ["PERMIT_REQUIRED"],
+    "notes": "Unincorporated Sacramento County treats STRs as an accessory use with permit conditions; TOT registration applies.",
+    "sources": [
+      "https://planning.saccounty.gov/applicants/Documents/Short_Term_Rentals_Handout_v6.1.pdf",
+      "https://finance.saccounty.gov/Tax/Pages/TOTFAQ.aspx"
+    ],
+    "lastUpdated": "2025-09-16"
+  },
+  {
+    "state": "CA",
+    "county": "Sacramento",
+    "city": "Sacramento",
+    "confidencePercent": 60,
+    "restrictions": ["PERMIT_REQUIRED", "PRIMARY_RESIDENCE"],
+    "notes": "City requires a Short-Term Rental Permit (City Code 5.114) and imposes primary-residence and operating conditions.",
+    "sources": [
+      "https://records.cityofsacramento.org/ViewDoc.aspx?ID=s6tFBnt4W+JYW%2FeH8TTas0aC3v61fdzl",
+      "https://www.cityofsacramento.gov/content/dam/portal/finance/Revenue/permits-and-taxes/Short-Term%20Rental%20Application_Fillable%202024-07-01.pdf",
+      "https://codelibrary.amlegal.com/codes/sacramentoca/latest/sacramento_ca/"
+    ],
+    "lastUpdated": "2025-09-16"
+  }
+]

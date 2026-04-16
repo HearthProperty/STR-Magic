@@ -13,6 +13,7 @@ export function useEvaluateViewModel() {
     const [error, setError] = useState<string | null>(null);
     const [placeDetails, setPlaceDetails] = useState<PlaceDetails | null>(null);
     const [county, setCounty] = useState<string | null>(null);
+    const [city, setCity] = useState<string | null>(null);
     const [propertyType, setPropertyType] = useState<string | null>(null);
 
     // Autocomplete state
@@ -36,7 +37,10 @@ export function useEvaluateViewModel() {
         setLoading(true);
         setData(null);
         try {
-            const res = await fetch(`/api/evaluate?address=${encodeURIComponent(address)}`);
+            const params = new URLSearchParams({ address });
+            if (county) params.set("county", county);
+            if (city) params.set("city", city);
+            const res = await fetch(`/api/evaluate?${params.toString()}`);
             if (!res.ok) throw new Error("Failed to fetch evaluation");
             const json = (await res.json()) as EvaluateResponse;
             setData(json);
@@ -57,8 +61,9 @@ export function useEvaluateViewModel() {
                 const details = (await res.json()) as PlaceDetails;
                 setAddress(details.formattedAddress || s.description);
                 setPlaceDetails(details);
-                // derive county using LocationIQ first (prefer external canonical county labels)
+                // derive county and city using LocationIQ first (prefer external canonical labels)
                 let nextPropertyType: string | null = null;
+                let nextCity: string | null = null;
                 try {
                     const { lat, lng } = details.location;
                     const liq = await fetch(`/api/locationiq/reverse?lat=${encodeURIComponent(String(lat))}&lng=${encodeURIComponent(String(lng))}`);
@@ -67,21 +72,40 @@ export function useEvaluateViewModel() {
                         try { console.log('[VM] LocationIQ reverse', lj); } catch {}
                         if (lj?.county) setCounty(String(lj.county).replace(/\s*County$/i, ""));
                         if (lj?.homeType) nextPropertyType = lj.homeType;
-                        else {
-                            const countyComp = details.addressComponents.find((c) => c.types.includes("administrative_area_level_2"));
-                            const rawCounty = countyComp?.longName || countyComp?.shortName || null;
-                            setCounty(rawCounty ? rawCounty.replace(/\s*County$/i, "") : null);
+                        // Try to pull a normalized city/locality field when available
+                        const liqAddr = lj?.address || {};
+                        const liqCity = liqAddr.city || liqAddr.town || liqAddr.village || liqAddr.hamlet || liqAddr.municipality || null;
+                        if (liqCity) nextCity = String(liqCity);
+                        if (!nextCity) {
+                            // fallback to Google address components for city
+                            const cityComp = details.addressComponents.find((c) => c.types.includes("locality"))
+                                || details.addressComponents.find((c) => c.types.includes("postal_town"))
+                                || details.addressComponents.find((c) => c.types.includes("administrative_area_level_3"));
+                            const rawCity = cityComp?.longName || cityComp?.shortName || null;
+                            nextCity = rawCity;
                         }
+                        if (!nextCity && liqAddr?.state_district) nextCity = String(liqAddr.state_district);
                     } else {
                         const countyComp = details.addressComponents.find((c) => c.types.includes("administrative_area_level_2"));
                         const rawCounty = countyComp?.longName || countyComp?.shortName || null;
                         setCounty(rawCounty ? rawCounty.replace(/\s*County$/i, "") : null);
+                        const cityComp = details.addressComponents.find((c) => c.types.includes("locality"))
+                            || details.addressComponents.find((c) => c.types.includes("postal_town"))
+                            || details.addressComponents.find((c) => c.types.includes("administrative_area_level_3"));
+                        const rawCity = cityComp?.longName || cityComp?.shortName || null;
+                        nextCity = rawCity;
                     }
                 } catch {
                     const countyComp = details.addressComponents.find((c) => c.types.includes("administrative_area_level_2"));
                     const rawCounty = countyComp?.longName || countyComp?.shortName || null;
                     setCounty(rawCounty ? rawCounty.replace(/\s*County$/i, "") : null);
+                    const cityComp = details.addressComponents.find((c) => c.types.includes("locality"))
+                        || details.addressComponents.find((c) => c.types.includes("postal_town"))
+                        || details.addressComponents.find((c) => c.types.includes("administrative_area_level_3"));
+                    const rawCity = cityComp?.longName || cityComp?.shortName || null;
+                    nextCity = rawCity;
                 }
+                setCity(nextCity || null);
                 // If we still lack propertyType, try LocationIQ forward search with full address
                 if (!nextPropertyType) {
                     try {
@@ -122,12 +146,14 @@ export function useEvaluateViewModel() {
                 setAddress(s.description);
                 setPlaceDetails(null);
                 setCounty(null);
+                setCity(null);
                 setPropertyType(null);
             }
         } catch {
             setAddress(s.description);
             setPlaceDetails(null);
             setCounty(null);
+            setCity(null);
             setPropertyType(null);
         }
     }
@@ -151,6 +177,7 @@ export function useEvaluateViewModel() {
         setError(null);
         setPlaceDetails(null);
         setCounty(null);
+        setCity(null);
         setPropertyType(null);
         setSuggestions([]);
         setShowSuggestions(false);
@@ -199,6 +226,7 @@ export function useEvaluateViewModel() {
         error,
         placeDetails,
         county,
+        city,
         propertyType,
         suggestions,
         showSuggestions,

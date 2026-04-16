@@ -12,6 +12,7 @@ export default function Home() {
     error,
     placeDetails,
     county,
+    city,
     propertyType,
     suggestions,
     showSuggestions,
@@ -46,7 +47,7 @@ export default function Home() {
   function getEligibilityLabel(percentage: number): string {
     if (percentage >= 95) return "Approved";
     if (percentage >= 85) return "Favorable";
-    if (percentage >= 70) return "Limited";
+    if (percentage >= 70) return "Permitted";
     if (percentage >= 50) return "Conditional";
     if (percentage >= 25) return "Unfavorable";
     return "Prohibited";
@@ -123,6 +124,7 @@ export default function Home() {
               <div className="mt-3 grid grid-cols-1 gap-2 text-sm sm:text-base opacity-90">
                 <p><span className="font-medium">Address:</span> {placeDetails?.formattedAddress || data.address}</p>
                 <p><span className="font-medium">County:</span> {county || "N/A"}</p>
+                <p><span className="font-medium">City:</span> {city || "N/A"}</p>
                 <p><span className="font-medium">Property type:</span> {propertyType || "—"}</p>
               </div>
             </section>
@@ -216,10 +218,10 @@ export default function Home() {
                       <div>
                         <div className="flex items-start justify-between">
                           <p className="text-sm opacity-70">Comps Strength</p>
-                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium bg-black/[.06] text-black/80 dark:bg-white/10 dark:text-white/90 border border-apple">{label}</span>
+                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium bg-black/[.06] text-black/80 dark:bg_WHITE/10 dark:text_WHITE/90 border border-apple">{label}</span>
                         </div>
                         <div className="mt-3">
-                          <div className="relative h-2 rounded-full overflow-hidden bg-black/10 dark:bg-white/10">
+                          <div className="relative h-2 rounded-full overflow-hidden bg-black/10 dark:bg_WHITE/10">
                             <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(244,63,94,0.6) 0%, rgba(245,158,11,0.6) 40%, rgba(34,197,94,0.6) 100%)" }} />
                             <div className="absolute -top-1 h-4 w-4 rounded-full bg-white border border-black/10 dark:bg-black dark:border-white/20 shadow" style={{ left: `${pos}%`, transform: "translateX(-50%)" }} />
                           </div>
