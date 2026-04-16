@@ -218,10 +218,10 @@ export default function Home() {
                       <div>
                         <div className="flex items-start justify-between">
                           <p className="text-sm opacity-70">Comps Strength</p>
-                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium bg-black/[.06] text-black/80 dark:bg_WHITE/10 dark:text_WHITE/90 border border-apple">{label}</span>
+                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium bg-black/[.06] text-black/80 dark:bg-white/10 dark:text-white/90 border border-apple">{label}</span>
                         </div>
                         <div className="mt-3">
-                          <div className="relative h-2 rounded-full overflow-hidden bg-black/10 dark:bg_WHITE/10">
+                          <div className="relative h-2 rounded-full overflow-hidden bg-black/10 dark:bg-white/10">
                             <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(244,63,94,0.6) 0%, rgba(245,158,11,0.6) 40%, rgba(34,197,94,0.6) 100%)" }} />
                             <div className="absolute -top-1 h-4 w-4 rounded-full bg-white border border-black/10 dark:bg-black dark:border-white/20 shadow" style={{ left: `${pos}%`, transform: "translateX(-50%)" }} />
                           </div>
