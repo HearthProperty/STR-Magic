@@ -97,23 +97,60 @@ export function buildSeededComps(address: string): ComparableListing[] {
 export function buildSeededEligibility(address: string) {
     const seed = hashStringToSeed(address);
     const rnd = mulberry32(seed + 42);
-    const confidence = Math.max(0.35, Math.min(0.9, rnd() * 1.05));
-    const canOperateSTR = rnd() > 0.18; // skew to likely yes
-    const pool: string[] = [
-        "Registration required with county",
-        "Max 8 guests; quiet hours 10pm-7am",
-        "Annual renewal; remittance of local lodging tax",
-        "No events/parties; occupancy sensors required",
-        "On-site parking limited to 2 vehicles",
-    ];
-    // Pick 2-3 restrictions deterministically
-    const count = 2 + Math.floor(rnd() * 2);
-    const restrictions: string[] = [];
-    for (let i = 0; i < count; i++) {
-        const idx = Math.floor(rnd() * pool.length);
-        const item = pool.splice(idx, 1)[0];
-        if (item) restrictions.push(item);
+    // 5%..100% range to exercise all bands while seeded
+    const confidence = Math.max(0.05, Math.min(1, rnd()));
+    const percent = Math.round(confidence * 100);
+
+    function pick<T>(arr: T[], n: number): T[] {
+        const clone = arr.slice();
+        const out: T[] = [];
+        for (let i = 0; i < n && clone.length > 0; i++) {
+            const idx = Math.floor(rnd() * clone.length);
+            out.push(clone.splice(idx, 1)[0]);
+        }
+        return out;
     }
+
+    let restrictions: string[] = [];
+    if (percent >= 95) {
+        restrictions = pick([
+            "No permit required for STR in this jurisdiction",
+            "Register for occupancy tax remittance only",
+            "Follow standard noise and parking rules",
+        ], 2 + Math.floor(rnd() * 1));
+    } else if (percent >= 85) {
+        restrictions = pick([
+            "Permit required; streamlined online approval",
+            "Basic safety checklist (smoke/CO detectors, fire extinguisher)",
+            "Transient occupancy tax registration/remittance",
+        ], 2 + Math.floor(rnd() * 1));
+    } else if (percent >= 70) {
+        restrictions = pick([
+            "Capped annual nights (e.g., 90–180 days)",
+            "Hosted rental or primary residence requirement",
+            "Permit required; inspections may apply",
+        ], 2 + Math.floor(rnd() * 1));
+    } else if (percent >= 50) {
+        restrictions = pick([
+            "Hosted rental and capped nights required",
+            "Neighborhood notification and parking plan",
+            "Additional conditions or zoning overlays apply",
+        ], 2 + Math.floor(rnd() * 1));
+    } else if (percent >= 25) {
+        restrictions = pick([
+            "Permits extremely limited or subject to lottery",
+            "Moratoriums common; approvals rarely granted",
+            "Strict zoning or HOA constraints",
+        ], 2 + Math.floor(rnd() * 1));
+    } else {
+        restrictions = pick([
+            "Short‑term rentals prohibited by ordinance",
+            "Minimum stay 30+ days enforced",
+            "Significant fines for violations",
+        ], 2 + Math.floor(rnd() * 1));
+    }
+
+    const canOperateSTR = percent >= 50; // treat Conditional and above as operable
     return { canOperateSTR, confidence, restrictions };
 }
 
