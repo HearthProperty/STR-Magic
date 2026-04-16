@@ -148,13 +148,6 @@ export default function Home() {
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Summary</h2>
               <div className="mt-3 text-sm sm:text-base opacity-90">
                 <p><span className="font-medium">Address:</span> {data.address}</p>
-                {data.summary.restrictions.length > 0 && (
-                  <ul className="mt-2 list-disc list-inside opacity-80">
-                    {data.summary.restrictions.map((r: string, i: number) => (
-                      <li key={i}>{r}</li>
-                    ))}
-                  </ul>
-                )}
               </div>
             </section>
 
@@ -222,15 +215,27 @@ export default function Home() {
                 const label = data.summary.canOperateSTR ? "Likely Yes" : "Likely No";
                 const styles = getEligibilityClasses(percent);
                 return (
-                  <div className="mt-4 flex items-center justify-between">
-                    <div>
-                      <p className={`text-4xl sm:text-5xl font-semibold ${styles.text}`}>{percent}%</p>
-                      <p className="mt-1 text-sm sm:text-base opacity-80">Confidence</p>
+                  <>
+                    <div className="mt-4 flex items-center justify-between">
+                      <div>
+                        <p className={`text-4xl sm:text-5xl font-semibold ${styles.text}`}>{percent}%</p>
+                        <p className="mt-1 text-sm sm:text-base opacity-80">Confidence</p>
+                      </div>
+                      <span className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium ${styles.badgeBg} ${styles.text}`}>
+                        {label}
+                      </span>
                     </div>
-                    <span className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium ${styles.badgeBg} ${styles.text}`}>
-                      {label}
-                    </span>
-                  </div>
+                    {data.summary.restrictions.length > 0 && (
+                      <div className="mt-6">
+                        <h3 className="text-sm font-medium opacity-70">Restrictions</h3>
+                        <ul className="mt-2 list-disc list-inside text-sm">
+                          {data.summary.restrictions.map((r: string, i: number) => (
+                            <li key={i} className="text-muted">{r}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
                 );
               })()}
             </section>

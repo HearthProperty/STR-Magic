@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
-  --foreground: #0f0f0f;
+  --background: #ffffff; /* Apple white */
+  --foreground: #1d1d1f; /* Apple text */
+  --muted: #6e6e73; /* Secondary text */
+  --border: #d2d2d7; /* Subtle borders */
+  --elevated: #f5f5f7; /* Subtle surfaces */
+  --accent: #06c; /* Apple link blue */
 }
 
 @theme inline {
@@ -18,11 +22,24 @@ body {
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Softer borders and surfaces for Apple-like feel */
-.card {
-  border: 1px solid rgb(0 0 0 / 0.06);
-  background: rgb(255 255 255 / 0.75);
+/* Apple-like utilities */
+.apple-card {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 16px;
 }
+.apple-input {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 16px;
+}
+.apple-shadow {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 30px rgba(0,0,0,0.06);
+}
+.text-muted { color: var(--muted); }
+.text-accent { color: var(--accent); }
+.border-apple { border-color: var(--border); }
+.bg-elevated { background: var(--elevated); }
 
 /* Subtle loading shimmer */
 .skeleton {
