@@ -12,6 +12,15 @@ export interface ProForma {
 	operatingExpenses: number;
 	netOperatingIncome: number;
 	capRateEstimate?: number;
+	// Details for UI breakdown
+	averageNightlyRate: number;
+	averageOccupancy: number;
+	averageCleaningFee: number;
+	nights: number;
+	averageStayNights: number;
+	turnovers: number;
+	roomRevenue: number;
+	cleaningRevenue: number;
 }
 
 export interface EvaluateSummary {

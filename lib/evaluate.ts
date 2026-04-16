@@ -34,7 +34,19 @@ export function computeProForma(comps: ComparableListing[]): ProForma {
 	const grossRevenue = Math.max(0, Math.round(roomRevenue + cleaningRevenue));
 	const operatingExpenses = Math.round(grossRevenue * 0.35);
 	const netOperatingIncome = Math.max(0, grossRevenue - operatingExpenses);
-	return { grossRevenue, operatingExpenses, netOperatingIncome };
+	return {
+		grossRevenue,
+		operatingExpenses,
+		netOperatingIncome,
+		averageNightlyRate,
+		averageOccupancy,
+		averageCleaningFee,
+		nights,
+		averageStayNights,
+		turnovers,
+		roomRevenue,
+		cleaningRevenue,
+	};
 }
 
 export function buildMockComps(): ComparableListing[] {
