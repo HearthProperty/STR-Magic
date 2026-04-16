@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { EvaluateResponse, PlaceSuggestion } from "@/lib/types";
+import { useEffect, useRef, useState, type FormEvent, type MouseEvent, type ChangeEvent } from "react";
+import type { EvaluateResponse, PlaceSuggestion, ComparableListing } from "@/lib/types";
 
 export default function Home() {
   const [address, setAddress] = useState("");
@@ -13,7 +13,29 @@ export default function Home() {
   const debounceRef = useRef<number | undefined>(undefined);
   const abortRef = useRef<AbortController | null>(null);
 
-  async function onSearch(e: React.FormEvent) {
+  function getEligibilityClasses(percentage: number) {
+    if (percentage >= 70) {
+      return {
+        text: "text-green-600 dark:text-green-400",
+        badgeBg:
+          "bg-green-50 dark:bg-green-950/40 border-green-200/60 dark:border-green-900/60",
+      };
+    }
+    if (percentage >= 40) {
+      return {
+        text: "text-amber-600 dark:text-amber-400",
+        badgeBg:
+          "bg-amber-50 dark:bg-amber-950/40 border-amber-200/60 dark:border-amber-900/60",
+      };
+    }
+    return {
+      text: "text-red-600 dark:text-red-400",
+      badgeBg:
+        "bg-red-50 dark:bg-red-950/40 border-red-200/60 dark:border-red-900/60",
+    };
+  }
+
+  async function onSearch(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -76,7 +98,7 @@ export default function Home() {
           <div className="relative rounded-2xl border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/5 backdrop-blur px-4 py-3 flex items-center gap-3 shadow-[0_1px_0_#0001,0_8px_30px_rgba(0,0,0,0.06)]">
             <input
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
               placeholder="Search an address"
               className="w-full bg-transparent outline-none placeholder:opacity-60 text-base sm:text-lg"
               onFocus={() => {
@@ -103,7 +125,7 @@ export default function Home() {
                       <button
                         type="button"
                         className="w-full text-left px-4 py-2 text-sm sm:text-base hover:bg-black/[.04] dark:hover:bg-white/[.06]"
-                        onMouseDown={(e) => e.preventDefault()}
+                        onMouseDown={(e: MouseEvent<HTMLButtonElement>) => e.preventDefault()}
                         onClick={() => onSelectSuggestion(s)}
                       >
                         {s.description}
@@ -122,14 +144,34 @@ export default function Home() {
 
         {data && (
           <div className="mt-10 grid gap-6">
+            {/* STR Eligibility Card */}
+            <section className="rounded-2xl border border-black/10 dark:border-white/15 p-6 bg-white/70 dark:bg-white/5 backdrop-blur">
+              <h2 className="text-xl font-semibold tracking-[-0.02em]">STR Eligibility</h2>
+              {(() => {
+                const percent = Math.round(data.summary.confidence * 100);
+                const label = data.summary.canOperateSTR ? "Likely Yes" : "Likely No";
+                const styles = getEligibilityClasses(percent);
+                return (
+                  <div className="mt-4 flex items-center justify-between">
+                    <div>
+                      <p className={`text-4xl sm:text-5xl font-semibold ${styles.text}`}>{percent}%</p>
+                      <p className="mt-1 text-sm sm:text-base opacity-80">Confidence</p>
+                    </div>
+                    <span className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium ${styles.badgeBg} ${styles.text}`}>
+                      {label}
+                    </span>
+                  </div>
+                );
+              })()}
+            </section>
+
             <section className="rounded-2xl border border-black/10 dark:border-white/15 p-6 bg-white/70 dark:bg-white/5 backdrop-blur">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Summary</h2>
               <div className="mt-3 text-sm sm:text-base opacity-90">
                 <p><span className="font-medium">Address:</span> {data.address}</p>
-                <p className="mt-1"><span className="font-medium">STR Eligible:</span> {data.summary.canOperateSTR ? "Likely Yes" : "Likely No"} ({Math.round(data.summary.confidence * 100)}% confidence)</p>
                 {data.summary.restrictions.length > 0 && (
                   <ul className="mt-2 list-disc list-inside opacity-80">
-                    {data.summary.restrictions.map((r, i) => (
+                    {data.summary.restrictions.map((r: string, i: number) => (
                       <li key={i}>{r}</li>
                     ))}
                   </ul>
@@ -158,7 +200,7 @@ export default function Home() {
             <section className="rounded-2xl border border-black/10 dark:border-white/15 p-6 bg-white/70 dark:bg-white/5 backdrop-blur">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Comparable Listings</h2>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {data.comps.map((c, i) => (
+                {data.comps.map((c: ComparableListing, i: number) => (
                   <div key={i} className="rounded-xl border border-black/10 dark:border-white/15 p-4">
                     <p className="text-sm opacity-70 capitalize">{c.platform}</p>
                     <p className="mt-1 text-lg font-medium">${c.nightlyRate}/night · {Math.round(c.occupancy * 100)}% occ</p>
