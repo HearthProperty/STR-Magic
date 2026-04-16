@@ -204,7 +204,7 @@ export default function Home() {
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm sm:text-base">
                 <div className="rounded-xl border border-apple p-4 bg-surface">
                   <p className="opacity-70">Gross Revenue</p>
-                  <p className="mt-1 text-2xl font-semibold">${Math.round(data.market.projectedAnnualRentRevenue).toLocaleString()} <span className="text-sm font-normal opacity-70">/year</span></p>
+                  <p className="mt-1 text-2xl font-semibold">${Math.round(data.market.projectedAnnualRentRevenue).toLocaleString()}</p>
                 </div>
                 <div className="rounded-xl border border-apple p-4 bg-surface">
                   <p className="opacity-70">ADR</p>
