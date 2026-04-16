@@ -190,112 +190,66 @@ export default function Home() {
 
             <section className="apple-card apple-shadow p-6">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Pro Forma</h2>
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm sm:text-base">
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm sm:text-base">
                 <div className="rounded-xl border border-apple p-4 bg-surface">
                   <p className="opacity-70">Gross Revenue</p>
-                  <p className="mt-1 text-2xl font-semibold">${data.proForma.grossRevenue.toLocaleString()}</p>
+                  <p className="mt-1 text-2xl font-semibold">${Math.round(data.market.projectedAnnualRentRevenue).toLocaleString()} <span className="text-sm font-normal opacity-70">/year</span></p>
                 </div>
                 <div className="rounded-xl border border-apple p-4 bg-surface">
-                  <p className="opacity-70">Operating Expenses</p>
-                  <p className="mt-1 text-2xl font-semibold">${data.proForma.operatingExpenses.toLocaleString()}</p>
+                  <p className="opacity-70">ADR</p>
+                  <p className="mt-1 text-2xl font-semibold">${Math.round(data.market.adr).toLocaleString()} <span className="text-sm font-normal opacity-70">/night</span></p>
                 </div>
                 <div className="rounded-xl border border-apple p-4 bg-surface">
-                  <p className="opacity-70">NOI</p>
-                  <p className="mt-1 text-2xl font-semibold">${data.proForma.netOperatingIncome.toLocaleString()}</p>
+                  <p className="opacity-70">Occupancy</p>
+                  <p className="mt-1 text-2xl font-semibold">{Math.round(data.market.occupancy * 100)}%</p>
+                </div>
+                <div className="rounded-xl border border-apple p-4 bg-surface">
+                  <p className="opacity-70">RevPAR</p>
+                  <p className="mt-1 text-2xl font-semibold">${Math.round(data.market.adr * data.market.occupancy).toLocaleString()} <span className="text-sm font-normal opacity-70">/room</span></p>
                 </div>
               </div>
 
-              {/* Market Metrics (AirDNA) */}
-              <div className="mt-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium opacity-70">Market Metrics</h3>
-                  <span className="text-xs opacity-60">Source: {data.market.source === "airdna" ? "AirDNA" : "Estimate"}</span>
-                </div>
-                <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Projected Annual Rent Revenue</p>
-                    <p className="mt-1 font-medium">${Math.round(data.market.projectedAnnualRentRevenue).toLocaleString()}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">ADR (Avg Daily Rate)</p>
-                    <p className="mt-1 font-medium">${Math.round(data.market.adr).toLocaleString()}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Occupancy</p>
-                    <p className="mt-1 font-medium">{Math.round(data.market.occupancy * 100)}%</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">RevPAR</p>
-                    <p className="mt-1 font-medium">${Math.round(data.market.adr * data.market.occupancy).toLocaleString()}</p>
-                  </div>
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded-xl border border-apple p-4 bg-surface">
+                  <p className="opacity-70 text-sm">Seasonality Index (peak vs avg)</p>
+                  {(() => {
+                    const curve = data.market.seasonalityIndex;
+                    if (!curve || curve.length === 0) return <p className="mt-3 text-sm opacity-70">No data</p>;
+                    const values = curve.map(m => m.multiplier);
+                    const max = Math.max(...values);
+                    const monthLabels = ["J","F","M","A","M","J","J","A","S","O","N","D"];
+                    return (
+                      <div className="mt-3">
+                        <div className="flex items-end gap-2 h-28">
+                          {curve.map((m, idx) => {
+                            const heightPct = Math.max(6, Math.round((m.multiplier / max) * 100));
+                            return (
+                              <div key={idx} className="flex flex-col items-center gap-1 flex-1">
+                                <div className="w-full rounded-t-md bg-black/80 dark:bg-white/80" style={{ height: `${heightPct}%` }} />
+                                <span className="text-[10px] opacity-50">{monthLabels[(m.month - 1) % 12]}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
-                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Seasonality</p>
-                    {(() => {
-                      const curve = data.market.seasonalityIndex;
-                      if (!curve || curve.length === 0) return <p className="mt-1 font-medium">—</p>;
-                      const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-                      const peak = curve.reduce((a, b) => (b.multiplier > a.multiplier ? b : a));
-                      const low = curve.reduce((a, b) => (b.multiplier < a.multiplier ? b : a));
-                      return (
-                        <p className="mt-1 font-medium">
-                          Peak {monthNames[(peak.month - 1) % 12]} = {peak.multiplier.toFixed(2)}× · Low {monthNames[(low.month - 1) % 12]} = {low.multiplier.toFixed(2)}×
-                        </p>
-                      );
-                    })()}
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Comps Strength</p>
-                    {(() => {
-                      const cs = data.market.compsStrength;
-                      if (!cs) return <p className="mt-1 font-medium">—</p>;
-                      return (
-                        <p className="mt-1 font-medium">
-                          {cs.count} comps{typeof cs.medianDistanceMiles === "number" ? ` · ~${cs.medianDistanceMiles.toFixed(1)} mi median` : ""}
-                        </p>
-                      );
-                    })()}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                <h3 className="text-sm font-medium opacity-70">Breakdown</h3>
-                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Avg Nightly Rate</p>
-                    <p className="mt-1 font-medium">${data.proForma.averageNightlyRate.toFixed(0)}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Avg Occupancy</p>
-                    <p className="mt-1 font-medium">{Math.round(data.proForma.averageOccupancy * 100)}%</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Nights</p>
-                    <p className="mt-1 font-medium">{Math.round(data.proForma.nights).toLocaleString()}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Avg Stay (nights)</p>
-                    <p className="mt-1 font-medium">{data.proForma.averageStayNights}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Turnovers</p>
-                    <p className="mt-1 font-medium">{Math.round(data.proForma.turnovers).toLocaleString()}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Room Revenue</p>
-                    <p className="mt-1 font-medium">${Math.round(data.proForma.roomRevenue).toLocaleString()}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Cleaning Revenue</p>
-                    <p className="mt-1 font-medium">${Math.round(data.proForma.cleaningRevenue).toLocaleString()}</p>
-                  </div>
-                  <div className="rounded-xl border border-apple p-4 bg-surface">
-                    <p className="opacity-60 text-xs">Expense Assumption</p>
-                    <p className="mt-1 font-medium">35% of Gross</p>
-                  </div>
+                <div className="rounded-xl border border-apple p-4 bg-surface">
+                  <p className="opacity-70 text-sm">Comps Strength (# of close matches + median distance)</p>
+                  {(() => {
+                    const cs = data.market.compsStrength;
+                    if (!cs) return <p className="mt-3 text-sm opacity-70">No data</p>;
+                    return (
+                      <div className="mt-3">
+                        <p className="text-2xl font-semibold">{cs.count.toLocaleString()} <span className="text-sm font-normal opacity-70">similar listings</span></p>
+                        {typeof cs.medianDistanceMiles === "number" && (
+                          <p className="mt-1 text-sm opacity-70">Median distance ~ {cs.medianDistanceMiles.toFixed(1)} mi</p>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             </section>
