@@ -1,4 +1,4 @@
-import rules from "@/lib/data/str_rules.ca.json" assert { type: "json" };
+import rules from "@/lib/data/str_rules.ca.json";
 
 export type RestrictionCode =
 	| "PROHIBITED"
