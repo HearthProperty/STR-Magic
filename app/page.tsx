@@ -95,7 +95,7 @@ export default function Home() {
           <p className="mt-2 text-sm/6 sm:text-base/7 opacity-80">Enter an address. We will fetch comps, project income, and check legality.</p>
         </header>
         <form onSubmit={onSearch} className="sticky top-6 z-10">
-          <div className="relative rounded-2xl border border-black/5 dark:border-white/15 bg-white dark:bg-white/5 px-4 py-3 flex items-center gap-3 shadow-sm">
+          <div className="relative rounded-2xl border border-black/5 bg-white px-4 py-3 flex items-center gap-3 shadow-sm">
             <input
               value={address}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
@@ -118,13 +118,13 @@ export default function Home() {
             </button>
 
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute left-0 right-0 top-[calc(100%+8px)] rounded-2xl border border-black/5 dark:border-white/15 bg-white shadow-lg overflow-hidden">
+              <div className="absolute left-0 right-0 top-[calc(100%+8px)] rounded-2xl border border-black/5 bg-white shadow-lg overflow-hidden">
                 <ul className="py-2">
                   {suggestions.map((s) => (
                     <li key={s.placeId}>
                       <button
                         type="button"
-                        className="w-full text-left px-4 py-2 text-sm sm:text-base hover:bg-black/[.04] dark:hover:bg-white/[.06]"
+                        className="w-full text-left px-4 py-2 text-sm sm:text-base hover:bg-black/[.04]"
                         onMouseDown={(e: MouseEvent<HTMLButtonElement>) => e.preventDefault()}
                         onClick={() => onSelectSuggestion(s)}
                       >
@@ -144,7 +144,7 @@ export default function Home() {
 
         {data && (
           <div className="mt-10 grid gap-6">
-            <section className="rounded-2xl border border-black/5 dark:border-white/15 p-6 bg-white dark:bg-white/5">
+            <section className="rounded-2xl border border-black/5 p-6 bg-white">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Summary</h2>
               <div className="mt-3 text-sm sm:text-base opacity-90">
                 <p><span className="font-medium">Address:</span> {data.address}</p>
@@ -158,18 +158,18 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-black/5 dark:border-white/15 p-6 bg-white dark:bg-white/5">
+            <section className="rounded-2xl border border-black/5 p-6 bg-white">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Pro Forma</h2>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm sm:text-base">
-                <div className="rounded-xl border border-black/5 dark:border-white/15 p-4 bg-white/80">
+                <div className="rounded-xl border border-black/5 p-4 bg-white/80">
                   <p className="opacity-70">Gross Revenue</p>
                   <p className="mt-1 text-2xl font-semibold">${data.proForma.grossRevenue.toLocaleString()}</p>
                 </div>
-                <div className="rounded-xl border border-black/5 dark:border-white/15 p-4 bg-white/80">
+                <div className="rounded-xl border border-black/5 p-4 bg-white/80">
                   <p className="opacity-70">Operating Expenses</p>
                   <p className="mt-1 text-2xl font-semibold">${data.proForma.operatingExpenses.toLocaleString()}</p>
                 </div>
-                <div className="rounded-xl border border-black/5 dark:border-white/15 p-4 bg-white/80">
+                <div className="rounded-xl border border-black/5 p-4 bg-white/80">
                   <p className="opacity-70">NOI</p>
                   <p className="mt-1 text-2xl font-semibold">${data.proForma.netOperatingIncome.toLocaleString()}</p>
                 </div>
@@ -178,35 +178,35 @@ export default function Home() {
               <div className="mt-6">
                 <h3 className="text-sm font-medium opacity-70">Breakdown</h3>
                 <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Avg Nightly Rate</p>
                     <p className="mt-1 font-medium">${data.proForma.averageNightlyRate.toFixed(0)}</p>
                   </div>
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Avg Occupancy</p>
                     <p className="mt-1 font-medium">{Math.round(data.proForma.averageOccupancy * 100)}%</p>
                   </div>
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Nights</p>
                     <p className="mt-1 font-medium">{Math.round(data.proForma.nights).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Avg Stay (nights)</p>
                     <p className="mt-1 font-medium">{data.proForma.averageStayNights}</p>
                   </div>
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Turnovers</p>
                     <p className="mt-1 font-medium">{Math.round(data.proForma.turnovers).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Room Revenue</p>
                     <p className="mt-1 font-medium">${Math.round(data.proForma.roomRevenue).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Cleaning Revenue</p>
                     <p className="mt-1 font-medium">${Math.round(data.proForma.cleaningRevenue).toLocaleString()}</p>
                   </div>
-                  <div className="rounded-xl border border-black/5 dark:border-white/15 p-3">
+                  <div className="rounded-xl border border-black/5 p-3">
                     <p className="opacity-60 text-xs">Expense Assumption</p>
                     <p className="mt-1 font-medium">35% of Gross</p>
                   </div>
@@ -215,7 +215,7 @@ export default function Home() {
             </section>
 
             {/* STR Eligibility Card (moved below Pro Forma) */}
-            <section className="rounded-2xl border border-black/5 dark:border-white/15 p-6 bg-white dark:bg-white/5">
+            <section className="rounded-2xl border border-black/5 p-6 bg-white">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">STR Eligibility</h2>
               {(() => {
                 const percent = Math.round(data.summary.confidence * 100);
@@ -235,11 +235,11 @@ export default function Home() {
               })()}
             </section>
 
-            <section className="rounded-2xl border border-black/5 dark:border-white/15 p-6 bg-white dark:bg-white/5">
+            <section className="rounded-2xl border border-black/5 p-6 bg-white">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">Comparable Listings</h2>
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {data.comps.map((c: ComparableListing, i: number) => (
-                  <div key={i} className="rounded-xl border border-black/5 dark:border-white/15 p-4 bg-white/80">
+                  <div key={i} className="rounded-xl border border-black/5 p-4 bg-white/80">
                     <p className="text-sm opacity-70 capitalize">{c.platform}</p>
                     <p className="mt-1 text-lg font-medium">${c.nightlyRate}/night · {Math.round(c.occupancy * 100)}% occ</p>
                     <p className="text-sm opacity-70">Cleaning fee ${c.cleaningFee}</p>

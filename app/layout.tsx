@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "STR Magic",
   description: "Premium STR underwriting: comps, pro forma, and legality in one search.",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
