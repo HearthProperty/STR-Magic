@@ -185,9 +185,9 @@ export default function Home() {
                     return (
                       <div>
                         <p className="opacity-70 text-sm">Comps Strength:</p>
-                        <p className="mt-1 text-xl font-semibold">({label})</p>
+                        <p className="mt-1 text-xl font-semibold">{label}</p>
                         <p className="mt-1 text-sm">{count.toLocaleString()} Comps</p>
-                        <p className="mt-1 text-sm">{typeof radius === "number" ? `${radius} mile radius` : "— mile radius"}</p>
+                        <p className="mt-1 text-sm">{typeof radius === "number" ? `${radius} mile radius` : "3 mile radius"}</p>
                       </div>
                     );
                   })()}
@@ -195,7 +195,7 @@ export default function Home() {
               </div>
             </section>
 
-            {/* STR Eligibility Card (moved below Pro Forma) */}
+            {/* STR Eligibility Card */}
             <section className="apple-card apple-shadow p-6">
               {(() => {
                 const percent = Math.round(data.summary.confidence * 100);
