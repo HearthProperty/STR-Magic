@@ -1,19 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent, type MouseEvent, type ChangeEvent } from "react";
-import type { EvaluateResponse, PlaceSuggestion, ComparableListing, PlaceDetails } from "@/lib/types";
+import type { ComparableListing } from "@/lib/types";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useEvaluateViewModel } from "@/lib/viewmodels/useEvaluateViewModel";
 
 export default function Home() {
-  const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<EvaluateResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [hasUserEdited, setHasUserEdited] = useState(false);
-  const debounceRef = useRef<number | undefined>(undefined);
-  const abortRef = useRef<AbortController | null>(null);
+  const {
+    address,
+    loading,
+    data,
+    error,
+    suggestions,
+    showSuggestions,
+    onChangeAddress,
+    onSearch,
+    onSelectSuggestion,
+    onFocusInput,
+    onBlurInput,
+    onSuggestionMouseDown,
+    reset,
+  } = useEvaluateViewModel();
 
   function getEligibilityClasses(percentage: number) {
     if (percentage >= 70) {
@@ -43,82 +49,7 @@ export default function Home() {
     return "Prohibited";
   }
 
-  async function onSearch(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    setData(null);
-    try {
-      const res = await fetch(`/api/evaluate?address=${encodeURIComponent(address)}`);
-      if (!res.ok) throw new Error("Failed to fetch evaluation");
-      const json = (await res.json()) as EvaluateResponse;
-      setData(json);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function onSelectSuggestion(s: PlaceSuggestion) {
-    try {
-      setShowSuggestions(false);
-      setSuggestions([]);
-      setHasUserEdited(false);
-      const res = await fetch(`/api/places/details?placeId=${encodeURIComponent(s.placeId)}`);
-      if (res.ok) {
-        const details = (await res.json()) as PlaceDetails;
-        setAddress(details.formattedAddress || s.description);
-      } else {
-        setAddress(s.description);
-      }
-    } catch {
-      setAddress(s.description);
-    }
-  }
-
-  function resetHome() {
-    setAddress("");
-    setData(null);
-    setError(null);
-    setSuggestions([]);
-    setShowSuggestions(false);
-    setHasUserEdited(false);
-  }
-
-  useEffect(() => {
-    // Debounced autocomplete
-    if (debounceRef.current) window.clearTimeout(debounceRef.current);
-    if (!hasUserEdited) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-    if (!address || address.trim().length < 3) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-    debounceRef.current = window.setTimeout(async () => {
-      try {
-        if (abortRef.current) abortRef.current.abort();
-        const controller = new AbortController();
-        abortRef.current = controller;
-        const res = await fetch(`/api/places/autocomplete?input=${encodeURIComponent(address)}`, {
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error("Autocomplete failed");
-        const json = (await res.json()) as { predictions: PlaceSuggestion[] };
-        setSuggestions(json.predictions?.slice(0, 6) || []);
-        setShowSuggestions(true);
-      } catch (_err) {
-        // Ignore abort errors or network blips; keep UX smooth
-      }
-    }, 250);
-    return () => {
-      if (debounceRef.current) window.clearTimeout(debounceRef.current);
-    };
-  }, [address, hasUserEdited]);
+  // Local helpers for eligibility badge
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
@@ -128,7 +59,7 @@ export default function Home() {
             <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em]">
               <button
                 type="button"
-                onClick={resetHome}
+                onClick={reset}
                 className="-ml-2 px-2 py-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                 aria-label="Go to home"
               >
@@ -143,19 +74,11 @@ export default function Home() {
           <div className="relative apple-input apple-shadow px-4 py-3 flex items-center gap-3">
             <input
               value={address}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                setHasUserEdited(true);
-                setAddress(e.target.value);
-              }}
+              onChange={onChangeAddress}
               placeholder="Search an address"
               className="w-full bg-transparent outline-none placeholder:opacity-60 text-base sm:text-lg"
-              onFocus={() => {
-                if (hasUserEdited && suggestions.length > 0) setShowSuggestions(true);
-              }}
-              onBlur={() => {
-                // Delay to allow click on suggestion
-                setTimeout(() => setShowSuggestions(false), 120);
-              }}
+              onFocus={onFocusInput}
+              onBlur={onBlurInput}
             />
             <button
               type="submit"
@@ -173,7 +96,7 @@ export default function Home() {
                       <button
                         type="button"
                         className="w-full text-left px-4 py-2 text-sm sm:text-base hover:bg-black/[.04]"
-                        onMouseDown={(e: MouseEvent<HTMLButtonElement>) => e.preventDefault()}
+                        onMouseDown={onSuggestionMouseDown}
                         onClick={() => onSelectSuggestion(s)}
                       >
                         {s.description}
@@ -252,11 +175,15 @@ export default function Home() {
                   {(() => {
                     const cs = data.market.compsStrength;
                     if (!cs) return <p className="mt-3 text-sm opacity-70">No data</p>;
+                    const rangeMiles = typeof cs.medianDistanceMiles === "number" ? Math.max(1, Math.round(cs.medianDistanceMiles * 2)) : undefined;
                     return (
                       <div className="mt-3">
                         <p className="text-2xl font-semibold">{cs.count.toLocaleString()} <span className="text-sm font-normal opacity-70">similar listings</span></p>
                         {typeof cs.medianDistanceMiles === "number" && (
                           <p className="mt-1 text-sm opacity-70">Median distance ~ {cs.medianDistanceMiles.toFixed(1)} mi</p>
+                        )}
+                        {typeof rangeMiles === "number" && (
+                          <p className="mt-1 text-sm opacity-70">{rangeMiles} mile range</p>
                         )}
                       </div>
                     );

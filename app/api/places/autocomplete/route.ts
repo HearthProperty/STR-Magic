@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type { PlaceSuggestion } from "@/lib/types";
 
+/**
+ * Proxy for Google Places Autocomplete, with address-only biasing.
+ */
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const input = (searchParams.get("input") || "").trim();

@@ -1,5 +1,8 @@
 import { ComparableListing, ProForma, MarketMetrics } from "./types";
 
+/**
+ * Compute averaged comp metrics used by downstream calculations.
+ */
 export function computeAverages(comps: ComparableListing[]) {
 	const count = comps.length || 1;
 	const totals = comps.reduce(
@@ -23,6 +26,14 @@ export function computeAverages(comps: ComparableListing[]) {
  * - nights = 365 * avgOccupancy
  * - turnovers assume average stay length of 3 nights
  * - operating expenses fixed at 35% of gross
+ */
+/**
+ * Compute a simple pro forma from comps.
+ * - nights = 365 * avgOccupancy
+ * - turnovers = nights / averageStayNights
+ * - roomRevenue = nights * averageNightlyRate
+ * - cleaningRevenue = turnovers * averageCleaningFee
+ * - operatingExpenses = 35% of gross
  */
 export function computeProForma(comps: ComparableListing[]): ProForma {
 	const { averageNightlyRate, averageOccupancy, averageCleaningFee } = computeAverages(comps);
@@ -77,6 +88,9 @@ function hashStringToSeed(input: string): number {
     return h >>> 0;
 }
 
+/**
+ * Return deterministic comps based on address seed. Useful for demos or fallback.
+ */
 export function buildSeededComps(address: string): ComparableListing[] {
     const seed = hashStringToSeed(address.toLowerCase());
     const rnd = mulberry32(seed);
@@ -94,6 +108,9 @@ export function buildSeededComps(address: string): ComparableListing[] {
     });
 }
 
+/**
+ * Build a seeded eligibility score with sample restrictions.
+ */
 export function buildSeededEligibility(address: string) {
     const seed = hashStringToSeed(address);
     const rnd = mulberry32(seed + 42);
@@ -154,6 +171,9 @@ export function buildSeededEligibility(address: string) {
     return { canOperateSTR, confidence, restrictions };
 }
 
+/**
+ * Utility to simulate realistic latency for UX.
+ */
 export async function simulateNetworkDelay(minMs = 350, maxMs = 900) {
     const span = Math.max(0, maxMs - minMs);
     const delay = minMs + Math.floor(Math.random() * span);
@@ -167,6 +187,9 @@ export interface AirDNAConfig {
     baseUrl?: string;
 }
 
+/**
+ * Fetch market metrics from AirDNA; fallback to seeded estimate when key is absent or call fails.
+ */
 export async function fetchAirDNAMarketMetrics(address: string, cfg: AirDNAConfig = {}): Promise<MarketMetrics> {
     const apiKey = cfg.apiKey || process.env.AIRDNA_API_KEY;
     const baseUrl = cfg.baseUrl || process.env.AIRDNA_API_BASE_URL || "https://api.airdna.co";
