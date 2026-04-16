@@ -213,7 +213,7 @@ export async function fetchAirDNAMarketMetrics(address: string, cfg: AirDNAConfi
             occupancy: avg.averageOccupancy,
             projectedAnnualRentRevenue,
             seasonalityIndex,
-            compsStrength: { count: comps.length, freshnessDays: 30 },
+            compsStrength: { count: comps.length, freshnessDays: 30, similarityPercent: 62 },
         };
     }
 
@@ -252,6 +252,7 @@ export async function fetchAirDNAMarketMetrics(address: string, cfg: AirDNAConfi
                   count: Array.isArray(json.comps) ? json.comps.length : Number(json?.comps?.count ?? 0),
                   medianDistanceMiles: Number(json?.comps?.median_distance_miles ?? json?.comps?.medianDistanceMiles ?? undefined),
                   freshnessDays: Number(json?.comps?.freshness_days ?? json?.comps?.freshnessDays ?? 30),
+                  similarityPercent: Number(json?.comps?.similarity_percent ?? json?.comps?.similarityPercent ?? 62),
               }
             : undefined;
 
@@ -281,7 +282,7 @@ export async function fetchAirDNAMarketMetrics(address: string, cfg: AirDNAConfi
             occupancy: avg.averageOccupancy,
             projectedAnnualRentRevenue,
             seasonalityIndex,
-            compsStrength: { count: comps.length, freshnessDays: 30 },
+            compsStrength: { count: comps.length, freshnessDays: 30, similarityPercent: 62 },
         };
     }
 }
