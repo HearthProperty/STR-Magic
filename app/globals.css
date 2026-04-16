@@ -7,6 +7,9 @@
   --border: #d2d2d7; /* Subtle borders */
   --elevated: #f5f5f7; /* Subtle surfaces */
   --accent: #06c; /* Apple link blue */
+  --surface: #ffffff; /* Card/Input surfaces */
+  --button-bg: #000000;
+  --button-fg: #ffffff;
 }
 
 @theme inline {
@@ -25,12 +28,12 @@ body {
 /* Apple-like utilities */
 .apple-card {
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--surface);
   border-radius: 16px;
 }
 .apple-input {
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--surface);
   border-radius: 16px;
 }
 .apple-shadow {
@@ -40,6 +43,25 @@ body {
 .text-accent { color: var(--accent); }
 .border-apple { border-color: var(--border); }
 .bg-elevated { background: var(--elevated); }
+
+.apple-button {
+  background: var(--button-bg);
+  color: var(--button-fg);
+  border-radius: 12px;
+}
+
+/* Dark theme tokens */
+[data-theme="dark"] {
+  --background: #000000;
+  --foreground: #f5f5f7;
+  --muted: #a1a1a6;
+  --border: #2c2c2e;
+  --elevated: #1c1c1e;
+  --surface: #1c1c1e;
+  --accent: #0a84ff;
+  --button-bg: #ffffff;
+  --button-fg: #000000;
+}
 
 /* Subtle loading shimmer */
 .skeleton {
