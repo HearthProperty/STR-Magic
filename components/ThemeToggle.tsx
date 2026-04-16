@@ -24,7 +24,7 @@ export default function ThemeToggle() {
 	return (
 		<button
 			onClick={toggle}
-			className="ios-switch apple-shadow"
+			className="ios-switch"
 			data-on={theme === "dark" ? "true" : "false"}
 			role="switch"
 			aria-checked={theme === "dark"}

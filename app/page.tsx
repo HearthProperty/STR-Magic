@@ -59,6 +59,14 @@ export default function Home() {
     setSuggestions([]);
   }
 
+  function resetHome() {
+    setAddress("");
+    setData(null);
+    setError(null);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  }
+
   useEffect(() => {
     // Debounced autocomplete
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
@@ -93,7 +101,16 @@ export default function Home() {
       <div className="mx-auto max-w-3xl px-6 py-16">
         <header className="mb-10">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em]">STR Magic</h1>
+            <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em]">
+              <button
+                type="button"
+                onClick={resetHome}
+                className="-ml-2 px-2 py-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                aria-label="Go to home"
+              >
+                STR Magic
+              </button>
+            </h1>
             <ThemeToggle />
           </div>
           <p className="mt-2 text-sm/6 sm:text-base/7 opacity-80">Enter an address. We will fetch comps, project income, and check legality.</p>

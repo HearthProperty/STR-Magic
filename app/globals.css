@@ -57,29 +57,37 @@ body {
   position: relative;
   display: inline-flex;
   align-items: center;
-  width: 52px;
-  height: 32px;
+  justify-content: center;
+  width: 51px;
+  height: 31px;
+  line-height: 0;
+  vertical-align: middle;
   border-radius: 999px;
   background: var(--switch-off);
-  border: 1px solid var(--border);
-  transition: background-color 200ms ease, border-color 200ms ease;
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: background-color 200ms ease, box-shadow 200ms ease;
 }
 .ios-switch[data-on="true"] {
   background: var(--switch-on);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 0px transparent;
 }
 .ios-switch-handle {
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 26px;
-  height: 26px;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
   background: #fff;
   border-radius: 999px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.25);
   transition: transform 200ms ease;
 }
 .ios-switch[data-on="true"] .ios-switch-handle { transform: translateX(20px); }
+
+.ios-switch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* Dark theme tokens */
 [data-theme="dark"] {
