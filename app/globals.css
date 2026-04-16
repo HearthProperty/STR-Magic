@@ -45,6 +45,7 @@ body {
 .text-accent { color: var(--accent); }
 .border-apple { border-color: var(--border); }
 .bg-elevated { background: var(--elevated); }
+.bg-surface { background: var(--surface); }
 
 .apple-button {
   background: var(--button-bg);
