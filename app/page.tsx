@@ -1,103 +1,110 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import type { EvaluateResponse } from "@/lib/types";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<EvaluateResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  async function onSearch(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    setData(null);
+    try {
+      const res = await fetch(`/api/evaluate?address=${encodeURIComponent(address)}`);
+      if (!res.ok) throw new Error("Failed to fetch evaluation");
+      const json = (await res.json()) as EvaluateResponse;
+      setData(json);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <div className="mx-auto max-w-3xl px-6 py-16">
+        <header className="mb-10">
+          <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em]">STR Magic</h1>
+          <p className="mt-2 text-sm/6 sm:text-base/7 opacity-80">Enter an address. We will fetch comps, project income, and check legality.</p>
+        </header>
+        <form onSubmit={onSearch} className="sticky top-6 z-10">
+          <div className="rounded-2xl border border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/5 backdrop-blur px-4 py-3 flex items-center gap-3 shadow-[0_1px_0_#0001,0_8px_30px_rgba(0,0,0,0.06)]">
+            <input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Search an address"
+              className="w-full bg-transparent outline-none placeholder:opacity-60 text-base sm:text-lg"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <button
+              type="submit"
+              disabled={!address || loading}
+              className="rounded-xl px-4 py-2 bg-black text-white dark:bg-white dark:text-black text-sm font-medium disabled:opacity-50"
+            >
+              {loading ? "Searching…" : "Search"}
+            </button>
+          </div>
+        </form>
+
+        {error && (
+          <p className="mt-6 text-red-600 dark:text-red-400 text-sm">{error}</p>
+        )}
+
+        {data && (
+          <div className="mt-10 grid gap-6">
+            <section className="rounded-2xl border border-black/10 dark:border-white/15 p-6 bg-white/70 dark:bg-white/5 backdrop-blur">
+              <h2 className="text-xl font-semibold tracking-[-0.02em]">Summary</h2>
+              <div className="mt-3 text-sm sm:text-base opacity-90">
+                <p><span className="font-medium">Address:</span> {data.address}</p>
+                <p className="mt-1"><span className="font-medium">STR Eligible:</span> {data.summary.canOperateSTR ? "Likely Yes" : "Likely No"} ({Math.round(data.summary.confidence * 100)}% confidence)</p>
+                {data.summary.restrictions.length > 0 && (
+                  <ul className="mt-2 list-disc list-inside opacity-80">
+                    {data.summary.restrictions.map((r, i) => (
+                      <li key={i}>{r}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </section>
+
+            <section className="rounded-2xl border border-black/10 dark:border-white/15 p-6 bg-white/70 dark:bg-white/5 backdrop-blur">
+              <h2 className="text-xl font-semibold tracking-[-0.02em]">Pro Forma</h2>
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm sm:text-base">
+                <div className="rounded-xl border border-black/10 dark:border-white/15 p-4">
+                  <p className="opacity-70">Gross Revenue</p>
+                  <p className="mt-1 text-2xl font-semibold">${data.proForma.grossRevenue.toLocaleString()}</p>
+                </div>
+                <div className="rounded-xl border border-black/10 dark:border-white/15 p-4">
+                  <p className="opacity-70">Operating Expenses</p>
+                  <p className="mt-1 text-2xl font-semibold">${data.proForma.operatingExpenses.toLocaleString()}</p>
+                </div>
+                <div className="rounded-xl border border-black/10 dark:border-white/15 p-4">
+                  <p className="opacity-70">NOI</p>
+                  <p className="mt-1 text-2xl font-semibold">${data.proForma.netOperatingIncome.toLocaleString()}</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-2xl border border-black/10 dark:border-white/15 p-6 bg-white/70 dark:bg-white/5 backdrop-blur">
+              <h2 className="text-xl font-semibold tracking-[-0.02em]">Comparable Listings</h2>
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {data.comps.map((c, i) => (
+                  <div key={i} className="rounded-xl border border-black/10 dark:border-white/15 p-4">
+                    <p className="text-sm opacity-70 capitalize">{c.platform}</p>
+                    <p className="mt-1 text-lg font-medium">${c.nightlyRate}/night · {Math.round(c.occupancy * 100)}% occ</p>
+                    <p className="text-sm opacity-70">Cleaning fee ${c.cleaningFee}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

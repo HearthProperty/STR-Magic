@@ -1,0 +1,30 @@
+export type CompPlatform = "airbnb" | "vrbo";
+
+export interface ComparableListing {
+	platform: CompPlatform;
+	nightlyRate: number; // USD per night
+	occupancy: number; // 0..1 average occupancy rate
+	cleaningFee: number; // USD per turnover
+}
+
+export interface ProForma {
+	grossRevenue: number;
+	operatingExpenses: number;
+	netOperatingIncome: number;
+	capRateEstimate?: number;
+}
+
+export interface EvaluateSummary {
+	canOperateSTR: boolean;
+	restrictions: string[];
+	confidence: number; // 0..1
+}
+
+export interface EvaluateResponse {
+	address: string;
+	summary: EvaluateSummary;
+	comps: ComparableListing[];
+	proForma: ProForma;
+}
+
+
