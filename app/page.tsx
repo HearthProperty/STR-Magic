@@ -17,22 +17,19 @@ export default function Home() {
   function getEligibilityClasses(percentage: number) {
     if (percentage >= 70) {
       return {
-        text: "text-green-600 dark:text-green-400",
-        badgeBg:
-          "bg-green-50 dark:bg-green-950/40 border-green-200/60 dark:border-green-900/60",
+        text: "text-green-600",
+        badgeBg: "bg-surface border-green-300",
       };
     }
     if (percentage >= 40) {
       return {
-        text: "text-amber-600 dark:text-amber-400",
-        badgeBg:
-          "bg-amber-50 dark:bg-amber-950/40 border-amber-200/60 dark:border-amber-900/60",
+        text: "text-amber-600",
+        badgeBg: "bg-surface border-amber-300",
       };
     }
     return {
-      text: "text-red-600 dark:text-red-400",
-      badgeBg:
-        "bg-red-50 dark:bg-red-950/40 border-red-200/60 dark:border-red-900/60",
+      text: "text-red-600",
+      badgeBg: "bg-surface border-red-300",
     };
   }
 
@@ -236,7 +233,7 @@ export default function Home() {
                 const styles = getEligibilityClasses(percent);
                 return (
                   <>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-start justify-between">
                       <h2 className="text-xl font-semibold tracking-[-0.02em]">STR Eligibility</h2>
                       <span className={`inline-flex items-center rounded-full border px-3.5 py-1.5 text-base font-medium ${styles.badgeBg} ${styles.text}`}>
                         {label}
@@ -247,7 +244,7 @@ export default function Home() {
                       <p className="mt-1 text-sm sm:text-base opacity-80">Confidence</p>
                     </div>
                     {data.summary.restrictions.length > 0 && (
-                      <div className="mt-6">
+                      <div className="mt-3">
                         <h3 className="text-sm font-medium opacity-70">Restrictions</h3>
                         <ul className="mt-2 list-disc list-inside text-sm">
                           {data.summary.restrictions.map((r: string, i: number) => (
