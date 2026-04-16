@@ -15,6 +15,7 @@ export function useEvaluateViewModel() {
     const [county, setCounty] = useState<string | null>(null);
     const [city, setCity] = useState<string | null>(null);
     const [propertyType, setPropertyType] = useState<string | null>(null);
+    const [propertyExcerpt, setPropertyExcerpt] = useState<string | null>(null);
 
     // Autocomplete state
     const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
@@ -56,6 +57,7 @@ export function useEvaluateViewModel() {
             setShowSuggestions(false);
             setSuggestions([]);
             setHasUserEdited(false);
+            setPropertyExcerpt(null);
             const res = await fetch(`/api/places/details?placeId=${encodeURIComponent(s.placeId)}`);
             if (res.ok) {
                 const details = (await res.json()) as PlaceDetails;
@@ -148,6 +150,7 @@ export function useEvaluateViewModel() {
                 setCounty(null);
                 setCity(null);
                 setPropertyType(null);
+                setPropertyExcerpt(null);
             }
         } catch {
             setAddress(s.description);
@@ -155,6 +158,7 @@ export function useEvaluateViewModel() {
             setCounty(null);
             setCity(null);
             setPropertyType(null);
+            setPropertyExcerpt(null);
         }
     }
 
@@ -179,6 +183,7 @@ export function useEvaluateViewModel() {
         setCounty(null);
         setCity(null);
         setPropertyType(null);
+        setPropertyExcerpt(null);
         setSuggestions([]);
         setShowSuggestions(false);
         setHasUserEdited(false);
@@ -218,6 +223,35 @@ export function useEvaluateViewModel() {
         };
     }, [address, hasUserEdited]);
 
+    // Fetch a short GPT-generated property excerpt when we have enough context
+    useEffect(() => {
+        const shouldFetch = Boolean((placeDetails?.formattedAddress || address) && (propertyType || city || county));
+        if (!shouldFetch) return;
+        let cancelled = false;
+        const run = async () => {
+            try {
+                const payload = {
+                    address: placeDetails?.formattedAddress || address,
+                    propertyType: propertyType || undefined,
+                    city: city || undefined,
+                    county: county || undefined,
+                };
+                const res = await fetch('/api/describe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) return;
+                const j = await res.json();
+                if (!cancelled) setPropertyExcerpt(typeof j?.excerpt === 'string' ? j.excerpt : null);
+            } catch {
+                // swallow errors; description is non-critical
+            }
+        };
+        run();
+        return () => { cancelled = true; };
+    }, [address, placeDetails?.formattedAddress, propertyType, city, county]);
+
     return {
         // state
         address,
@@ -228,6 +262,7 @@ export function useEvaluateViewModel() {
         county,
         city,
         propertyType,
+        propertyExcerpt,
         suggestions,
         showSuggestions,
         hasUserEdited,

@@ -14,6 +14,7 @@ export default function Home() {
     county,
     city,
     propertyType,
+    propertyExcerpt,
     suggestions,
     showSuggestions,
     onChangeAddress,
@@ -126,6 +127,9 @@ export default function Home() {
                 <p><span className="font-medium">County:</span> {county || "N/A"}</p>
                 <p><span className="font-medium">City:</span> {city || "N/A"}</p>
                 <p><span className="font-medium">Property type:</span> {propertyType || "—"}</p>
+                {propertyExcerpt && (
+                  <p className="opacity-80">{propertyExcerpt}</p>
+                )}
               </div>
             </section>
 
