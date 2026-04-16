@@ -43,4 +43,17 @@ export interface PlaceSuggestion {
 	matchedSubstrings?: Array<{ offset: number; length: number }>;
 }
 
+export interface PlaceDetailsAddressComponent {
+	longName: string;
+	shortName: string;
+	types: string[];
+}
+
+export interface PlaceDetails {
+	placeId: string;
+	formattedAddress: string;
+	location: { lat: number; lng: number };
+	addressComponents: PlaceDetailsAddressComponent[];
+}
+
 

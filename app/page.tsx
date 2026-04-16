@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent, type MouseEvent, type ChangeEvent } from "react";
-import type { EvaluateResponse, PlaceSuggestion, ComparableListing } from "@/lib/types";
+import type { EvaluateResponse, PlaceSuggestion, ComparableListing, PlaceDetails } from "@/lib/types";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
@@ -59,10 +59,20 @@ export default function Home() {
     }
   }
 
-  function onSelectSuggestion(s: PlaceSuggestion) {
-    setAddress(s.description);
-    setShowSuggestions(false);
-    setSuggestions([]);
+  async function onSelectSuggestion(s: PlaceSuggestion) {
+    try {
+      setShowSuggestions(false);
+      setSuggestions([]);
+      const res = await fetch(`/api/places/details?placeId=${encodeURIComponent(s.placeId)}`);
+      if (res.ok) {
+        const details = (await res.json()) as PlaceDetails;
+        setAddress(details.formattedAddress || s.description);
+      } else {
+        setAddress(s.description);
+      }
+    } catch {
+      setAddress(s.description);
+    }
   }
 
   function resetHome() {
