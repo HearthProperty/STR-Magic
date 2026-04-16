@@ -11,6 +11,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [hasUserEdited, setHasUserEdited] = useState(false);
   const debounceRef = useRef<number | undefined>(undefined);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -63,6 +64,7 @@ export default function Home() {
     try {
       setShowSuggestions(false);
       setSuggestions([]);
+      setHasUserEdited(false);
       const res = await fetch(`/api/places/details?placeId=${encodeURIComponent(s.placeId)}`);
       if (res.ok) {
         const details = (await res.json()) as PlaceDetails;
@@ -81,11 +83,17 @@ export default function Home() {
     setError(null);
     setSuggestions([]);
     setShowSuggestions(false);
+    setHasUserEdited(false);
   }
 
   useEffect(() => {
     // Debounced autocomplete
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    if (!hasUserEdited) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
     if (!address || address.trim().length < 3) {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -110,7 +118,7 @@ export default function Home() {
     return () => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
     };
-  }, [address]);
+  }, [address, hasUserEdited]);
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
@@ -135,11 +143,14 @@ export default function Home() {
           <div className="relative apple-input apple-shadow px-4 py-3 flex items-center gap-3">
             <input
               value={address}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setHasUserEdited(true);
+                setAddress(e.target.value);
+              }}
               placeholder="Search an address"
               className="w-full bg-transparent outline-none placeholder:opacity-60 text-base sm:text-lg"
               onFocus={() => {
-                if (suggestions.length > 0) setShowSuggestions(true);
+                if (hasUserEdited && suggestions.length > 0) setShowSuggestions(true);
               }}
               onBlur={() => {
                 // Delay to allow click on suggestion
