@@ -24,10 +24,13 @@ export default function ThemeToggle() {
 	return (
 		<button
 			onClick={toggle}
-			className="apple-button px-3 py-2 text-sm font-medium"
-			aria-label="Toggle theme"
+			className="ios-switch apple-shadow"
+			data-on={theme === "dark" ? "true" : "false"}
+			role="switch"
+			aria-checked={theme === "dark"}
+			aria-label="Toggle dark mode"
 		>
-			{theme === "light" ? "Dark Mode" : "Light Mode"}
+			<span className="ios-switch-handle" />
 		</button>
 	);
 }

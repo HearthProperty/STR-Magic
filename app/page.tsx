@@ -92,11 +92,11 @@ export default function Home() {
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <div className="mx-auto max-w-3xl px-6 py-16">
         <header className="mb-10">
-          <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em]">STR Magic</h1>
-          <div className="mt-3 flex items-center gap-3">
-            <p className="text-sm/6 sm:text-base/7 opacity-80">Enter an address. We will fetch comps, project income, and check legality.</p>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em]">STR Magic</h1>
             <ThemeToggle />
           </div>
+          <p className="mt-2 text-sm/6 sm:text-base/7 opacity-80">Enter an address. We will fetch comps, project income, and check legality.</p>
         </header>
         <form onSubmit={onSearch} className="sticky top-6 z-10">
           <div className="relative rounded-2xl border border-black/5 bg-white px-4 py-3 flex items-center gap-3 shadow-sm">

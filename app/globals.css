@@ -10,6 +10,8 @@
   --surface: #ffffff; /* Card/Input surfaces */
   --button-bg: #000000;
   --button-fg: #ffffff;
+  --switch-off: #d2d2d7; /* iOS switch off */
+  --switch-on: #34c759; /* iOS switch on (light) */
 }
 
 @theme inline {
@@ -50,6 +52,35 @@ body {
   border-radius: 12px;
 }
 
+/* iOS-style switch */
+.ios-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 52px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--switch-off);
+  border: 1px solid var(--border);
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+.ios-switch[data-on="true"] {
+  background: var(--switch-on);
+  border-color: transparent;
+}
+.ios-switch-handle {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  transition: transform 200ms ease;
+}
+.ios-switch[data-on="true"] .ios-switch-handle { transform: translateX(20px); }
+
 /* Dark theme tokens */
 [data-theme="dark"] {
   --background: #000000;
@@ -61,6 +92,8 @@ body {
   --accent: #0a84ff;
   --button-bg: #ffffff;
   --button-fg: #000000;
+  --switch-off: #3a3a3c; /* iOS dark switch off */
+  --switch-on: #30d158; /* iOS dark switch on */
 }
 
 /* Subtle loading shimmer */
