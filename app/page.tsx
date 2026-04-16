@@ -200,18 +200,38 @@ export default function Home() {
                     const count = cs?.count ?? 0;
                     const median = typeof cs?.medianDistanceMiles === "number" ? cs!.medianDistanceMiles : undefined;
                     const label = (() => {
-                      if (!cs) return "—";
+                      if (!cs) return "Low"; // default conservative
                       if (count < 10 || (typeof median === "number" && median > 3)) return "Low";
                       if (count >= 20 && (typeof median !== "number" || median <= 1.5)) return "High";
                       return "Medium";
                     })();
-                    const radius = typeof median === "number" ? Math.max(1, Math.round(median)) : undefined;
+                    const radius = typeof median === "number" ? Math.max(1, Math.round(median)) : 3;
+                    const pointerIndex = label === "Low" ? 1 : label === "Medium" ? 3 : 5; // 1..5
+                    const positionPct = ((pointerIndex - 1) / 4) * 100;
                     return (
                       <div>
-                        <p className="opacity-70 text-sm">Comps Strength:</p>
-                        <p className="mt-1 text-xl font-semibold">{label}</p>
-                        <p className="mt-1 text-sm">{count.toLocaleString()} Comps</p>
-                        <p className="mt-1 text-sm">{typeof radius === "number" ? `${radius} mile radius` : "3 mile radius"}</p>
+                        <p className="opacity-70 text-sm">Comps Strength</p>
+                        <p className="mt-1 text-2xl font-semibold">{label}</p>
+                        <div className="mt-3 relative">
+                          <div className="flex items-center justify-between">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <span
+                                key={i}
+                                className={`${i <= pointerIndex - 1 ? "bg-black/80 dark:bg-white/80" : "bg-black/15 dark:bg-white/15"} h-1.5 w-10 rounded-full`}
+                              />
+                            ))}
+                          </div>
+                          <div
+                            className="absolute -top-2"
+                            style={{ left: `calc(${positionPct}% )`, transform: "translateX(-50%)" }}
+                          >
+                            <span className="block h-2 w-2 rounded-full bg-black/80 dark:bg-white/80" />
+                          </div>
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{count.toLocaleString()} comps</span>
+                          <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{radius} mi radius</span>
+                        </div>
                       </div>
                     );
                   })()}
