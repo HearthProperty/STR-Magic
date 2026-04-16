@@ -66,7 +66,7 @@ export interface MarketMetrics {
 	occupancy: number; // 0..1
 	projectedAnnualRentRevenue: number; // ADR * occupancy * 365 (exclude cleaning)
 	seasonalityIndex?: Array<{ month: number; multiplier: number }>; // 1..12 months
-	compsStrength?: { count: number; medianDistanceMiles?: number };
+	compsStrength?: { count: number; medianDistanceMiles?: number; freshnessDays?: number };
 }
 
 

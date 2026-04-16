@@ -171,20 +171,18 @@ export default function Home() {
                 </div>
 
                 <div className="rounded-xl border border-apple p-4 bg-surface">
-                  <p className="opacity-70 text-sm">Comps Strength (# of close matches + median distance)</p>
+                  <p className="opacity-70 text-sm">Comps Strength</p>
                   {(() => {
                     const cs = data.market.compsStrength;
                     if (!cs) return <p className="mt-3 text-sm opacity-70">No data</p>;
-                    const rangeMiles = typeof cs.medianDistanceMiles === "number" ? Math.max(1, Math.round(cs.medianDistanceMiles * 2)) : undefined;
+                    const count = cs.count ?? 0;
+                    const median = typeof cs.medianDistanceMiles === "number" ? cs.medianDistanceMiles : undefined;
+                    const freshness = typeof cs.freshnessDays === "number" ? cs.freshnessDays : undefined;
+                    const isLow = count < 10 || (typeof median === "number" && median > 3);
+                    const label = isLow ? "Low" : "High";
                     return (
                       <div className="mt-3">
-                        <p className="text-2xl font-semibold">{cs.count.toLocaleString()} <span className="text-sm font-normal opacity-70">similar listings</span></p>
-                        {typeof cs.medianDistanceMiles === "number" && (
-                          <p className="mt-1 text-sm opacity-70">Median distance ~ {cs.medianDistanceMiles.toFixed(1)} mi</p>
-                        )}
-                        {typeof rangeMiles === "number" && (
-                          <p className="mt-1 text-sm opacity-70">{rangeMiles} mile range</p>
-                        )}
+                        <p className="text-sm opacity-70">Comps Strength: <span className="font-medium">{label}</span> — {count.toLocaleString()} comps{typeof median === "number" ? ` • median ${median.toFixed(1)} mi` : ""}{typeof freshness === "number" ? ` • data ${freshness}d fresh` : ""}.</p>
                       </div>
                     );
                   })()}
