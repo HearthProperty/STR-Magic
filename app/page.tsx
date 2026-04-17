@@ -297,11 +297,22 @@ export default function Home() {
                           <p className="text-sm opacity-70">Comps Strength</p>
                           <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium bg-black/[.06] text-black/80 dark:bg-white/10 dark:text-white/90 border border-apple">{label}</span>
                         </div>
-                        <div className="mt-3">
-                          <div className="relative h-2 rounded-full overflow-hidden bg-black/10 dark:bg-white/10">
-                            <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(244,63,94,0.6) 0%, rgba(245,158,11,0.6) 40%, rgba(34,197,94,0.6) 100%)" }} />
-                            <div className="absolute -top-1 h-4 w-4 rounded-full bg-white border border-black/10 dark:bg-black dark:border-white/20 shadow" style={{ left: `${pos}%`, transform: "translateX(-50%)" }} />
-                          </div>
+                        <div className="mt-3 flex gap-[2px] items-center h-2">
+                          {Array.from({ length: 10 }).map((_, i) => {
+                            const threshold = i * 10;
+                            const isActive = pos > threshold;
+                            return (
+                              <div 
+                                key={i} 
+                                className={`flex-1 h-full rounded-sm transition-colors ${
+                                  isActive 
+                                    ? "bg-black/60 dark:bg-white/70" 
+                                    : "bg-black/5 dark:bg-white/10"
+                                }`} 
+                              />
+                            );
+                          })}
+                        </div>
                           <div className="sr-only" aria-live="polite">Comps strength {label} (score {score})</div>
                         </div>
                         <div className="mt-3 flex flex-wrap gap-2">
