@@ -6,8 +6,8 @@ export async function GET(request: Request) {
 	const placeId = (searchParams.get("placeId") || "").trim();
 	if (!placeId) return NextResponse.json({ error: "Missing placeId" }, { status: 400 });
 
-	const key = process.env.GOOGLE_MAPS_API_KEY;
-	if (!key) return NextResponse.json({ error: "Missing GOOGLE_MAPS_API_KEY" }, { status: 500 });
+	const key = process.env.GOOGLE_PLACES_API_KEY;
+	if (!key) return NextResponse.json({ error: "Missing GOOGLE_PLACES_API_KEY" }, { status: 500 });
 
 	const params = new URLSearchParams({ place_id: placeId, key, fields: "place_id,formatted_address,geometry,address_component,types" });
 	const url = `https://maps.googleapis.com/maps/api/place/details/json?${params.toString()}`;

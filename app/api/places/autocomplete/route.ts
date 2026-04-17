@@ -9,10 +9,10 @@ export async function GET(request: Request) {
 	const input = (searchParams.get("input") || "").trim();
 	if (!input) return NextResponse.json({ predictions: [] });
 
-	const key = process.env.GOOGLE_MAPS_API_KEY;
+	const key = process.env.GOOGLE_PLACES_API_KEY;
 	if (!key) {
 		return NextResponse.json(
-			{ error: "Missing GOOGLE_MAPS_API_KEY" },
+			{ error: "Missing GOOGLE_PLACES_API_KEY" },
 			{ status: 500 }
 		);
 	}
