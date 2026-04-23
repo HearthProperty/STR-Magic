@@ -321,8 +321,7 @@ export default function Home() {
                             );
                           })}
                         </div>
-                          <div className="sr-only" aria-live="polite">Comps strength {label} (score {score})</div>
-                        </div>
+                        <div className="sr-only" aria-live="polite">Comps strength {label} (score {score})</div>
                         <div className="mt-3 flex flex-wrap gap-2">
                           <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{count.toLocaleString()} comps</span>
                           <span className="inline-flex items-center rounded-full border border-apple px-3 py-1 text-sm bg-surface">{radius} mi radius</span>
