@@ -170,7 +170,15 @@ export default function Home() {
                     type="tel"
                     required
                     value={phone}
-                    onChange={e => setPhone(e.target.value)}
+                    onChange={e => {
+                      const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      let formatted = "";
+                      if (digits.length > 0) formatted += `(${digits.slice(0, 3)}`;
+                      if (digits.length >= 3) formatted += `) `;
+                      if (digits.length > 3) formatted += digits.slice(3, 6);
+                      if (digits.length >= 6) formatted += `-${digits.slice(6)}`;
+                      setPhone(formatted);
+                    }}
                     className="w-full apple-input px-4 py-3 bg-[var(--surface)] border border-[var(--apple)] rounded-xl outline-none focus:border-[var(--accent)] transition-colors"
                     placeholder="(555) 123-4567"
                   />
