@@ -78,7 +78,7 @@ export default function Home() {
                 className="-ml-2 px-2 py-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                 aria-label="Go to home"
               >
-                <img src="/hearth-logo.svg" alt="Hearth Property" className="nav__logo-img" />
+                STR Magic
               </button>
             </h1>
             <ThemeToggle />

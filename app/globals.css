@@ -122,5 +122,3 @@ body {
 @keyframes shimmer {
   100% { transform: translateX(300%); }
 }
-
-.nav__logo-img { height: 30px; width: auto; display: block; }
